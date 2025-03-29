@@ -1,10 +1,8 @@
 import subprocess
+import auth
 
 # systemd services
-SYSTEMD = ["3d_control.service",
-           "power_control.service",
-           "kobra_bot.service",
-           "fan_control.service"]
+SYSTEMD = [auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]]
 
 ACTIONS = ["start", "stop", "restart"]
 

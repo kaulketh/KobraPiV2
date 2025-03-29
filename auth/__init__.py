@@ -8,7 +8,7 @@ from .mySecrets import *
 USR = page_user
 PSSWD = page_pass
 (uss) = {USR: generate_password_hash(PSSWD)}
-auth = HTTPBasicAuth()
+AUTH = HTTPBasicAuth()
 
 
 @auth.verify_password
