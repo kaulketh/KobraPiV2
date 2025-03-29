@@ -1,10 +1,27 @@
+import os
 import subprocess
+
 import auth
 
 # systemd services
 SYSTEMD = [auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]]
-
 ACTIONS = ["start", "stop", "restart"]
+
+
+def __sudo_control(action, service):
+    os.system(f"sudo systemctl {action} {service}")
+
+
+def start(service):
+    __sudo_control(ACTIONS[0], service)
+
+
+def stop(service):
+    __sudo_control(ACTIONS[1], service)
+
+
+def restart(service: str):
+    __sudo_control(ACTIONS[2], service)
 
 
 def get_service_status(service):
