@@ -180,7 +180,7 @@ def on_message(msg):
         if text == "/stop_webserver":
             kobra_bot.sendMessage(cid, "Stop web server.")
             services.stop(srvcs[0])
-        state_update(cid)
+    state_update(cid)
 
 
 def on_callback_query(msg):
@@ -206,7 +206,7 @@ def on_callback_query(msg):
                 msg = "Make sure that cameras are available and switched on!"
             kobra_bot.answerCallbackQuery(query_id, text=msg)
             sys.stdout.write(f"{msg}\n")
-        state_update(cid)
+    state_update(cid)
 
 
 def main():
