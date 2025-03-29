@@ -25,16 +25,12 @@ def restart(service: str):
 
 
 def status(service):
-    __sudo_control("status", service)
-
-
-def get_service_status(service):
-    status = subprocess.run(['systemctl', 'is-active', service],
-                            capture_output=True, text=True).stdout.strip()
+    state = subprocess.run(['systemctl', 'is-active', service],
+                           capture_output=True, text=True).stdout.strip()
     enabled = subprocess.run(['systemctl', 'is-enabled', service],
                              capture_output=True, text=True).stdout.strip()
     description = subprocess.run(
         ['systemctl', 'show', service, '--property=Description'],
         capture_output=True, text=True).stdout.strip()
     description = description.replace("Description=", "").strip()
-    return {"status": status, "enabled": enabled, "description": description}
+    return {"status": state, "enabled": enabled, "description": description}
