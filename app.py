@@ -29,14 +29,14 @@ app = Flask("Kobra2+Control",
 app_host = "0.0.0.0"
 app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
 CORS(app)
-kobra = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
+kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
 gallery = os.listdir(os.path.join(app.static_folder, "gallery"))
 
 
 # Server routes
 # make available in all routes
-@kobra.app_context_processor
+@kobra_bp.app_context_processor
 def inject_context():
     return dict(
         version=VERSION,
@@ -49,7 +49,7 @@ def inject_context():
 
 
 # page requests
-@kobra.route(ABOUT.path, methods=['GET'])
+@kobra_bp.route(ABOUT.path, methods=['GET'])
 def about():
     return render_template(
         ABOUT.template,
@@ -57,7 +57,7 @@ def about():
         title=ABOUT.title)
 
 
-@kobra.route(CAMS.path, methods=['GET'])
+@kobra_bp.route(CAMS.path, methods=['GET'])
 def cams():
     cams_on = fetch_power(CAMS.id) > 0
     if cams_on:
@@ -75,13 +75,13 @@ def cams():
         cams=_cameras)
 
 
-@kobra.route(INDEX.path, methods=['GET'])
+@kobra_bp.route(INDEX.path, methods=['GET'])
 def index():
     return render_template(INDEX.template, active_page=INDEX.id,
                            title=INDEX.title)
 
 
-@kobra.route(MADE.path, methods=['GET'])
+@kobra_bp.route(MADE.path, methods=['GET'])
 def made():
     return render_template(
         MADE.template,
@@ -90,7 +90,7 @@ def made():
         info=MADE.info)
 
 
-@kobra.route(POWER.path, methods=['GET'])
+@kobra_bp.route(POWER.path, methods=['GET'])
 def power():
     devs = fetch_socket_states()
     return render_template(
@@ -100,7 +100,7 @@ def power():
         title=POWER.title)
 
 
-@kobra.route(SRVCS.path, methods=['GET'])
+@kobra_bp.route(SRVCS.path, methods=['GET'])
 def services():
     statuses = {service: get_service_status(service) for service in SYSTEMD}
     return render_template(
@@ -111,7 +111,7 @@ def services():
 
 
 # POST requests
-@kobra.route(f"{SRVCS.path}/<action>/<service>", methods=['POST'])
+@kobra_bp.route(f"{SRVCS.path}/<action>/<service>", methods=['POST'])
 @AUTH.login_required
 def control(action, service):
     if service in SYSTEMD and action in ACTIONS:
@@ -121,7 +121,7 @@ def control(action, service):
         return redirect(url_for(url))
 
 
-@kobra.route(f"{SLASH}toggle/<device_id>", methods=["POST"])
+@kobra_bp.route(f"{SLASH}toggle/<device_id>", methods=["POST"])
 @AUTH.login_required
 def toggle(device_id):
     if device_id not in TASMOTA_SOCKETS:
@@ -150,7 +150,7 @@ def toggle(device_id):
 
 
 # repeating status request
-@kobra.route(STATUS.path, methods=["GET"])
+@kobra_bp.route(STATUS.path, methods=["GET"])
 def status():
     def get_cpu_temp():
         try:
@@ -182,7 +182,7 @@ def status():
 
 
 # Register kobra blueprint for run
-app.register_blueprint(kobra)
+app.register_blueprint(kobra_bp)
 
 # Message Gunicorn's workers start
 if os.getpid() % workers == 0:
