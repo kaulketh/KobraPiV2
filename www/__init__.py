@@ -12,6 +12,7 @@ class AttrDict(dict):
 
 
 ROOT = "kobra"
+# ROOT = "newKobraPi"
 WIP = "[ work in progress ]"
 UNDER_CONSTR = "[ under construction ]"
 SLASH = "/"

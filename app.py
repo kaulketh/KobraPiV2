@@ -14,11 +14,11 @@ from auth import AUTH, CHAT_ID, KOBRA_BOT
 from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
 from gunicorn_config import workers
-from services import ACTIONS, SYSTEMD, status
+from services import ACTIONS, SYSTEMD, get_status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, SLASH
 
-VERSION = "N daa69f3b"
+VERSION = "V2"
 
 # Flask configuration
 APPLICATION_ROOT = f"{SLASH}{ROOT}"
@@ -102,7 +102,7 @@ def power():
 
 @kobra_bp.route(SRVCS.path, methods=['GET'])
 def services():
-    statuses = {service: status(service) for service in SYSTEMD}
+    statuses = {service: get_status(service) for service in SYSTEMD}
     return render_template(
         SRVCS.template,
         active_page=SRVCS.id,
