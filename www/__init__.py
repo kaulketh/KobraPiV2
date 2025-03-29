@@ -80,7 +80,7 @@ MADE = AttrDict({__K.pth: f"{SLASH}made",
                  __K.tmpt: f"made{__EXT}",
                  __K.nav: "made",
                  __K.id: "made",
-                 __K.tit: "made in and for 3d",
+                 __K.tit: "made in and for 3D",
                  __K.nfo: WIP,
                  __K.hnt: __EMPTY
                  })
