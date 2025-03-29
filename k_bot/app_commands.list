@@ -1,0 +1,11 @@
+// for use at "/setcommands" in bot settings
+
+start - Start and get state
+restart - Restart this bot service
+stop - Stop bot service
+restart_power - Restart consumption observer
+stop_power - Stop consumption observer
+restart_webserver - Restart webserver service
+stop_webserver - Stop webserver
+status - Get state
+// reboot -  Reboot device
