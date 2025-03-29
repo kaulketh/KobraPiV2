@@ -1,0 +1,26 @@
+{% include 'htm/page_header.htm' %}
+    <!-- main content -->
+    <div class="container my-4">
+        <div class="row justify-content-center justify-content-around">
+            {% if cams_on %}
+                {% for ip, info in cams.items() %}
+                    <div class="col-md-4 d-flex justify-content-around mb-3">
+                        <div class="p-3 border border-3 border-secondary shadow-lg rounded rotated-frame">
+                            <img src="../cams/{{ info.sfx }}"
+                                 class="img-fluid rounded"
+                                 alt="{{ info.name }}"/>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include 'htm/content_hint.htm' %}
+            {% else %}
+                <div class="col">
+                    {% include 'htm/content_info.htm' %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- end main content -->
+    <div class="row"></div>
+</div>
+{% include 'htm/page_footer.htm' %}

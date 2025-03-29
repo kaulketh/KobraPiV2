@@ -1,0 +1,278 @@
+body {
+    font-family: 'Orbitron', sans-serif;
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.page_content {
+    padding-top: 60px;
+    padding-bottom: 50px;
+    text-align: center;
+    align-items: center;
+}
+
+.btn {
+    padding: 0.9em 0.3em;
+    /*font-size: 2rem;*/
+    font-size: 1.2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    box-shadow: 10px 15px 15px 0 rgba(0, 0, 0, 0.33), 0 6px 8px 0 rgba(0, 0, 0, 0.19);
+    color: var(--status-color);
+    background-color: white;
+    border: 2px solid var(--status-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn:hover {
+    background-color: #333; /* Dark background on hover */
+    color: var(--hover-color); /* Lighter text color */
+    border-color: var(--status-color); /* Border color remains unchanged */
+}
+
+/* Colors for different states */
+:root {
+    --status-color-on: #d35400;
+    --status-color-off: #448795 !important;
+    --status-color-unknown: gray;
+    --hover-color-on: #ff6666; /* Brighter red on hover */
+    --hover-color-off: #49bbcf; /* Brighter green on hover */
+    --hover-color-unknown: #bfbfbf; /* Brighter gray on hover */
+}
+
+/* Dynamic assignment based on status */
+.btn[style*="--status-color: #d35400"] {
+    --hover-color: var(--hover-color-on);
+}
+
+.btn[style*="--status-color: #448795"] {
+    --hover-color: var(--hover-color-off);
+}
+
+.btn[style*="--status-color: gray"] {
+    --hover-color: var(--hover-color-unknown);
+}
+
+/* Subtle display for power indication */
+.btn small {
+    color: gray; /* Makes the power display gray */
+    font-size: 0.7rem; /* Smaller font size for subtle appearance */
+    font-weight: normal;
+}
+
+.col {
+    padding-top: 10px;
+}
+
+.row {
+    padding-top: 18px;
+}
+
+#subtitle {
+    color: rgb(255, 255, 255);
+    font-size: 1.5em;
+}
+
+#status {
+    color: rgb(60, 54, 138);
+    font-size: 2.0em;
+    font-weight: bold;
+}
+
+.fancy-frame {
+    border: 10px solid #8B4513; /* Wood-like brown */
+    padding: 10px;
+    background: #F5DEB3; /* Light beige */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.rotated-frame {
+    display: inline-block;
+    transform: rotate(90deg);
+    transform-origin: center;
+    margin: 50px auto; /* Adjust margin to prevent overlap */
+}
+
+.red-arrow {
+    font-size: 48px; /* Size */
+    font-weight: bold; /* Bold */
+    color: darkred; /* Red */
+    text-decoration: none; /* Optional: Remove underline */
+}
+
+.red-arrow:hover {
+    color: darkblue; /* Optional: Darker red on hover */
+    text-decoration: none;
+}
+
+.navbar-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030; /* Higher than the footer if needed */
+    background-color: #343a40; /* Dark gray like bg-dark */
+    padding: 10px 0;
+}
+
+.navbar-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40; /* Dark gray (Bootstrap bg-dark) */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+@keyframes wiggle {
+    0% {
+        transform: translateX(0) scale(1);
+        color: #971a1a;
+    }
+    50% {
+        transform: translateX(-5px) scale(1.1);
+        color: blue;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        color: #170202;
+    }
+}
+
+@keyframes wiggle-right {
+    0% {
+        transform: translateX(0) scale(1);
+        color: #170202;
+    }
+    50% {
+        transform: translateX(5px) scale(1.1);
+        color: darkblue;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        color: #971a1a;
+    }
+}
+
+.fancy-arrow {
+    display: inline-block;
+    font-size: 48px;
+    font-weight: bold;
+    text-decoration: none;
+    animation: wiggle 1.3s infinite ease-in-out;
+}
+
+.fancy-arrow:hover {
+    text-decoration: none;
+}
+
+.fancy-arrow-right {
+    display: inline-block;
+    font-size: 48px;
+    font-weight: bold;
+    text-decoration: none;
+    animation: wiggle-right 1.4s infinite ease-in-out;
+}
+
+.fancy-arrow-right:hover {
+    text-decoration: none;
+}
+
+/* Navbar with smooth gradient & shadow */
+.navbar {
+    background: linear-gradient(135deg, #1c1c1c, #2a2a2a);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Standard nav links */
+.navbar-nav .nav-link {
+    color: #d3d3d3;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.navbar-nav .nav-link:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* **Highlight active page** */
+.navbar-nav .nav-item.active .nav-link {
+    /*color: #1589a3 !important;*/
+    /*font-weight: bold;*/
+    /*text-shadow: 0 0 8px rgb(31, 54, 57);*/
+    color: rgb(234, 224, 170) !important;
+    font-weight: bold;
+    /*text-shadow: 0 0 8px rgba(0, 191, 255, 0.8);*/
+    text-shadow: 0 0 8px rgb(31, 54, 57);
+}
+
+/* Burger button design */
+.navbar-toggler {
+    border: 1px solid #555;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.table_container {
+    width: 100%;
+    background: white;
+    padding: 20px;
+    box-shadow: none; /*0 4px 8px rgba(0, 0, 0, 0.1);*/
+    border-radius: 8px;
+    display: flex;
+    justify-content: center; /* Zentriert das Table innerhalb des Containers */
+    align-items: center; /* Falls nötig, auch vertikal */
+}
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+
+th, td {
+    border: none;
+    padding: 12px;
+    text-align: left;
+}
+
+tbody{
+    width: 100%;
+    display: table;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+tr.border-bottom {
+    border-bottom: none !important; /*1px dotted gray !important;*/
+}
+
+.active_service {
+    color: green;
+    font-size: 0.8rem;
+}
+
+.inactive_service {
+    color: red;
+    font-size: 0.8rem;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+button {
+    padding: 2px 5px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 0.6rem; /*Smaller font size for subtle appearance*/
+    font-weight: normal;
+}

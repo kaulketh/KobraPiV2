@@ -1,0 +1,14 @@
+
+<!-- begin: iterate images block -->
+<div class="row justify-content-center justify-content-around">
+    {% for image in images %}
+        <div class="col-md-4 d-flex justify-content-around mb-2">
+            <div class="p-3 border border-3 border-secondary shadow-lg rounded">
+                <img src="{{ url_for('static', filename='images/' + image)}}"
+                     class="img-fluid rounded"
+                     alt=""/>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<!-- end: iterate images block -->

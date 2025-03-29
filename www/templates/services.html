@@ -1,0 +1,37 @@
+{% include 'htm/page_header.htm' %}
+    <!-- main content -->
+    <div class="row">
+        <div class="table_container">
+            <table>
+                {% for service, info in service_statuses.items() %}
+                    <tr class="border-bottom">
+                        <td>{{ service[:-8] }}</td>
+                        <td>
+                            <span class="{{ 'active_service' if info.enabled == 'enabled' else 'inactive_service' }}">{{ info.enabled }}</span>
+                            <span style="font-size: 0.8rem">and</span>
+                            <span class="{{ 'active_service' if info.status == 'active' else 'inactive_service' }}">{{ info.status }}</span>
+                        </td>
+                        <td>
+                            {% if info.enabled == 'enabled' %}
+                                <span class="btn-group">
+                                    {% for action, btn_class in {'start': 'btn-outline-success', 'stop': 'btn-outline-danger', 'restart': 'btn-outline-info'}.items() %}
+                                        <form action="{{ url_for('kobra.control', action=action, service=service) }}"
+                                              method="POST">
+                                            <button class="{{ btn_class }} .btn-sm"
+                                                    type="submit">{{ action }}</button>
+                                        </form>
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% set image="kobrapi_II.png" %}
+    {% include 'htm/block_image.htm' %}
+    <!-- end main content -->
+    <div class="row"></div>
+</div>
+{% include 'htm/page_footer.htm' %}
