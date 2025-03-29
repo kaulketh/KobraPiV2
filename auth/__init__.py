@@ -1,11 +1,12 @@
 import telepot
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_httpauth import HTTPBasicAuth
-import mySecrets
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from .mySecrets import *
 
 # page auth
-USR = mySecrets.page_user
-PSSWD = mySecrets.page_pass
+USR = page_user
+PSSWD = page_pass
 (uss) = {USR: generate_password_hash(PSSWD)}
 auth = HTTPBasicAuth()
 
@@ -17,7 +18,7 @@ def verify_password(name, psswd):
 
 
 # telegram
-TELEGRAM_TOKEN = mySecrets.telegram_token
-CHAT_ID = mySecrets.telegram_chat_id
+TELEGRAM_TOKEN = telegram_token
+CHAT_ID = telegram_chat_id
 
 KOBRA_BOT = telepot.Bot(TELEGRAM_TOKEN)

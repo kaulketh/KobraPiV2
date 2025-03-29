@@ -2,12 +2,13 @@ import sys
 
 import requests
 
-# Sockets
+import auth
+
 TASMOTA_SOCKETS = {
-    "main": {"name": "Main", "url": "http://192.168.0.114/cm"},
-    "cams": {"name": "Video", "url": "http://192.168.0.111/cm"},
-    "lights": {"name": "Light", "url": "http://192.168.0.113/cm"},
-    "printer": {"name": "Printer", "url": "http://192.168.0.112/cm"}
+    "main": {"name": "Main", "url": f"http://{auth.tsm_ips[0]}/cm"},
+    "cams": {"name": "Video", "url": f"http://{auth.tsm_ips[1]}/cm"},
+    "lights": {"name": "Light", "url": f"http://{auth.tsm_ips[2]}/cm"},
+    "printer": {"name": "Printer", "url": f"http://{auth.tsm_ips[3]}/cm"}
 }
 
 
