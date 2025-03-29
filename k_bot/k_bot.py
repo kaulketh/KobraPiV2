@@ -34,7 +34,7 @@ def __service_info():
     info = "*Services*\n"
     for s in srvcs:
         name = s.replace('_', " ").replace('.service', '')
-        state = services.status(s)['status']
+        state = services.get_status(s)['status']
         # "active", "inactive", "failed", etc.
         if state == "active":
             icon = icon_active
