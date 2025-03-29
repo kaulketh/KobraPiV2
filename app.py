@@ -83,14 +83,14 @@ def index():
 
 @kobra_bp.route(MADE.path, methods=['GET'])
 def made():
-    gallery_images = [f for f in gallery if
-                      f.endswith(('.jpg', '.png', '.jpeg', '.gif'))]
+    gallery_images = gallery
+    gallery_images.sort(reverse=True)
     return render_template(
         MADE.template,
         active_page=MADE.id,
         title=MADE.title,
         info=MADE.info,
-        gallery_images=gallery)
+        gallery_images=gallery_images)
 
 
 @kobra_bp.route(POWER.path, methods=['GET'])
