@@ -1,5 +1,5 @@
 import io
-import sys
+import os, sys
 import time
 import traceback
 
@@ -7,15 +7,16 @@ import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-from auth import CHAT_ID, KOBRA_BOT
+# This adds the parent directory (..) to sys.path so that Python can find auth.
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from auth import KOBRA_BOT, CHAT_ID
 from devices import TASMOTA_SOCKETS, ESP32_CAMERAS
-from services import SYSTEMD, stop, restart
 
 kobra_bot = KOBRA_BOT
 chat_id = CHAT_ID
 BOT_NAME = "[Printer control] "
 BOT_NAME_VIEW = "[3D print area] "
-
 cams = ESP32_CAMERAS
 socks = TASMOTA_SOCKETS
 global cams_powered
@@ -140,27 +141,21 @@ def on_message(msg):
         if text == "/restart":
             kobra_bot.sendMessage(cid, "Restart bot service.")
             restart(SYSTEMD[2])
-            # os.system("sudo systemctl restart kobra_bot.service")
         if text == "/stop":
             kobra_bot.sendMessage(cid, "Stop bot service.")
             stop(SYSTEMD[2])
-            # os.system("sudo systemctl stop kobra_bot.service")
         if text == "/restart_power":
             kobra_bot.sendMessage(cid, "Restart consumption observer.")
             restart(SYSTEMD[1])
-            # os.system("sudo systemctl restart power_control.service")
         if text == "/stop_power":
             kobra_bot.sendMessage(cid, "Stop consumption observer.")
             stop(SYSTEMD[1])
-            # os.system("sudo systemctl stop power_control.service")
         if text == "/restart_webserver":
             kobra_bot.sendMessage(cid, "Restart web server.")
             restart(SYSTEMD[0])
-            # os.system("sudo systemctl restart 3d_control.service")
         if text == "/stop_webserver":
             kobra_bot.sendMessage(cid, "Stop web server.")
             stop(SYSTEMD[0])
-            # os.system("sudo systemctl stop 3d_control.service")
         state_update(cid)
 
 

@@ -20,5 +20,4 @@ def verify_password(name, psswd):
 # telegram
 TELEGRAM_TOKEN = telegram_token
 CHAT_ID = telegram_chat_id
-
 KOBRA_BOT = telepot.Bot(TELEGRAM_TOKEN)

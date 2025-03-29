@@ -1,1 +1,1 @@
-from k_bot import *
+from .k_bot import *
