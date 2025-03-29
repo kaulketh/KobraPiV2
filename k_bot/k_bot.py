@@ -1,5 +1,6 @@
 import io
-import os, sys
+import os
+import sys
 import time
 import traceback
 
@@ -7,23 +8,42 @@ import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-# This adds the parent directory (..) to sys.path so that Python can find auth.
+# This adds the parent directory (..) to sys.path
+# so that Python can find own modules.
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import auth, devices, services
 
-from auth import KOBRA_BOT, CHAT_ID
-from devices import TASMOTA_SOCKETS, ESP32_CAMERAS
-
-kobra_bot = KOBRA_BOT
-chat_id = CHAT_ID
+kobra_bot = auth.KOBRA_BOT
+chat_id = auth.CHAT_ID
 BOT_NAME = "[Printer control] "
 BOT_NAME_VIEW = "[3D print area] "
-cams = ESP32_CAMERAS
-socks = TASMOTA_SOCKETS
+cams = devices.ESP32_CAMERAS
+socks = devices.TASMOTA_SOCKETS
+srvcs = services.SYSTEMD
+
 global cams_powered
 
-icon_na = "\U000026AB"
-icon_off = "\U000026AA"
-icon_on = "\U0001F7E0"
+icon_na = "\U000026AB"  # black
+icon_off = "\U000026AA"  # heavy white
+icon_on = "\U0001F7E0"  # orange
+icon_failed = "\U00002B55"  # heavy red
+icon_active = "\U0001F7E2"  # green
+
+
+def __service_info():
+    info = "*Services*\n"
+    for s in srvcs:
+        name = s.replace('_', " ").replace('.service', '')
+        state = services.status(s)['status']
+        # "active", "inactive", "failed", etc.
+        if state == "active":
+            icon = icon_active
+        elif state == "inactive":
+            icon = icon_off
+        else:
+            icon = icon_failed
+        info += f"{name}{icon}  "
+    return info
 
 
 def __build_keyboard():
@@ -32,23 +52,27 @@ def __build_keyboard():
     tasmota_btns = []
     snapshot_btn = [
         InlineKeyboardButton(text="Print area", callback_data="snapshots")]
-    status_text = "*Consumption*\n"
+
+    status_text = "*Server status information*\n\n"
+    status_text += f"{__service_info()}\n\n"
+    status_text += "*Consumption*\n"
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
+        # sys.stdout.write(f"{data['name']} - {data['url']}: {pwr}\n")
         if pwr == "N/A":
             icon = icon_na
         elif pwr > 0:
             icon = icon_on
         else:
             icon = icon_off
-        if data['name'] == "Cams":
+        if data['name'] == "Video":
             cams_powered = pwr > 0
         status_text += f"{data['name']} {pwr}W | "
         tasmota_btns.append(
             InlineKeyboardButton(text=f"{icon} {data['name']}",
                                  callback_data=f"tasmota:{key}"))
         time.sleep(.500)
-        sys.stdout.write(f"get socket state: {key}\n")
+        # sys.stdout.write(f"get socket state: {key}\n")
     # Snapshot button only, when cams are powered!
     if cams_powered:
         mrkup = InlineKeyboardMarkup(
@@ -140,22 +164,22 @@ def on_message(msg):
         #     os.system("sudo reboot")
         if text == "/restart":
             kobra_bot.sendMessage(cid, "Restart bot service.")
-            restart(SYSTEMD[2])
+            services.restart(srvcs[2])
         if text == "/stop":
             kobra_bot.sendMessage(cid, "Stop bot service.")
-            stop(SYSTEMD[2])
+            services.stop(srvcs[2])
         if text == "/restart_power":
             kobra_bot.sendMessage(cid, "Restart consumption observer.")
-            restart(SYSTEMD[1])
+            services.restart(srvcs[1])
         if text == "/stop_power":
             kobra_bot.sendMessage(cid, "Stop consumption observer.")
-            stop(SYSTEMD[1])
+            services.stop(srvcs[1])
         if text == "/restart_webserver":
             kobra_bot.sendMessage(cid, "Restart web server.")
-            restart(SYSTEMD[0])
+            services.restart(srvcs[0])
         if text == "/stop_webserver":
             kobra_bot.sendMessage(cid, "Stop web server.")
-            stop(SYSTEMD[0])
+            services.stop(srvcs[0])
         state_update(cid)
 
 
