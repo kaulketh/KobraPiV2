@@ -32,6 +32,7 @@ CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
 gallery = os.listdir(os.path.join(app.static_folder, "gallery"))
+gallery.sort(reverse=True)
 
 
 # Server routes
@@ -83,14 +84,11 @@ def index():
 
 @kobra_bp.route(MADE.path, methods=['GET'])
 def made():
-    gallery_images = gallery
-    gallery_images.sort(reverse=True)
     return render_template(
         MADE.template,
         active_page=MADE.id,
         title=MADE.title,
-        info=MADE.info,
-        gallery_images=gallery_images)
+        info=MADE.info)
 
 
 @kobra_bp.route(POWER.path, methods=['GET'])

@@ -1,5 +1,5 @@
 <div class="row gallery">
-        {% for image in gallery_images %}
+        {% for image in gallery %}
         <div class="col-md-4 col-sm-6 mb-4">
             <a href="{{ url_for('static', filename='gallery/' + image) }}" target="_blank">
                 <img src="{{ url_for('static', filename='gallery/' + image) }}" class="img-fluid rounded shadow-sm" alt="{{ image }}">
