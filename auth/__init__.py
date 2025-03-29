@@ -11,7 +11,7 @@ PSSWD = page_pass
 AUTH = HTTPBasicAuth()
 
 
-@auth.verify_password
+@AUTH.verify_password
 def verify_password(name, psswd):
     if name in uss and check_password_hash(uss.get(name), psswd):
         return name

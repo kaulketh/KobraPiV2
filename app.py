@@ -10,7 +10,7 @@ from flask import Flask, jsonify, Blueprint, render_template, redirect, \
     url_for
 from flask_cors import CORS
 
-from auth import AUTH, CHAT_ID
+from auth import AUTH, CHAT_ID, KOBRA_BOT
 from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
 from gunicorn_config import workers
@@ -18,7 +18,7 @@ from services import ACTIONS, SYSTEMD, get_service_status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, SLASH
 
-VERSION = "101274d9"
+VERSION = "34df02c9 n"
 
 # Flask configuration
 APPLICATION_ROOT = f"{SLASH}{ROOT}"
@@ -186,7 +186,7 @@ app.register_blueprint(kobra)
 
 # Message Gunicorn's workers start
 if os.getpid() % workers == 0:
-    kobra_bot.sendMessage(CHAT_ID,
+    KOBRA_BOT.sendMessage(CHAT_ID,
                           f"[Webserver] "
                           f"https://kauli.hopto.org/kobra\n"
                           f"{workers} "
