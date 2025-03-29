@@ -18,7 +18,7 @@ from services import ACTIONS, SYSTEMD, status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, SLASH
 
-VERSION = "N 53ef97b3"
+VERSION = "N daa69f3b"
 
 # Flask configuration
 APPLICATION_ROOT = f"{SLASH}{ROOT}"
