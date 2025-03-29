@@ -53,7 +53,7 @@ def __build_keyboard():
     snapshot_btn = [
         InlineKeyboardButton(text="Print area", callback_data="snapshots")]
 
-    status_text = "*Server status information*\n\n"
+    status_text = "*Server status and printer information*\n\n"
     status_text += f"{__service_info()}\n\n"
     status_text += "*Consumption*\n"
     for key, data in socks.items():
