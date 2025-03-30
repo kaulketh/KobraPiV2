@@ -87,11 +87,12 @@ MADE = AttrDict({__K.pth: f"{SLASH}made",
 
 STATUS = AttrDict({__K.pth: f"{SLASH}status"})
 
+# navigation elements order
 NAVI = [
     {__K.name: INDEX.navi, __K.ep: f"{ROOT}.{INDEX.id}", __K.id: INDEX.id},
-    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id},
     {__K.name: POWER.navi, __K.ep: f"{ROOT}.{POWER.id}", __K.id: POWER.id},
     {__K.name: CAMS.navi, __K.ep: f"{ROOT}.{CAMS.id}", __K.id: CAMS.id},
     {__K.name: SRVCS.navi, __K.ep: f"{ROOT}.{SRVCS.id}", __K.id: SRVCS.id},
-    {__K.name: ABOUT.navi, __K.ep: f"{ROOT}.{ABOUT.id}", __K.id: ABOUT.id}
+    {__K.name: ABOUT.navi, __K.ep: f"{ROOT}.{ABOUT.id}", __K.id: ABOUT.id},
+    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id}
 ]

@@ -6,6 +6,7 @@ import time
 
 import psutil
 import requests
+from PIL import Image
 from flask import Flask, jsonify, Blueprint, render_template, redirect, \
     url_for
 from flask_cors import CORS
@@ -31,9 +32,35 @@ app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
 CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
-gallery = os.listdir(os.path.join(app.static_folder, "gallery"))
-gallery.sort(reverse=True)
 
+# setup gallery
+GALLERY = os.path.join(app.static_folder, 'gallery')
+THUMBS = os.path.join(GALLERY, 'thumbs')
+os.makedirs(THUMBS, exist_ok=True)
+gallery = os.listdir(GALLERY)
+gallery.sort(reverse=True)
+thumbs = []
+
+
+def __create_thumbnail(image_path, thumbnail_path, size=(200, 150)):
+    """create thumbnail for each gallery image."""
+    with Image.open(image_path) as img:
+        img.thumbnail(size)
+        img.save(thumbnail_path)
+
+
+for filename in gallery:
+    if filename.endswith(('.jpg', '.png', '.jpeg', '.gif')):
+        full_path = os.path.join(GALLERY, filename)
+        thumb_path = os.path.join(THUMBS, filename)
+        # create thumbnail if not exists
+        if not os.path.exists(thumb_path):
+            __create_thumbnail(full_path, thumb_path)
+        thumbs.append(filename)
+    thumbs.sort()
+
+
+# end setup gallery
 
 # Server routes
 # make available in all routes
@@ -45,11 +72,12 @@ def inject_context():
         status_path=STATUS.path,
         pfx=APPLICATION_ROOT,
         images=images,
-        gallery=gallery
+        gallery=gallery,
+        thumbnails=thumbs
     )
 
 
-# page requests
+# GET requests
 @kobra_bp.route(ABOUT.path, methods=['GET'])
 def about():
     return render_template(
