@@ -31,9 +31,9 @@ icon_active = "\U0001F7E2"  # green
 
 
 def __service_info():
-    info = "*Services*\n"
+    info = "_Services_\n"
     for s in srvcs:
-        name = s.replace('_', " ").replace('.service', '')
+        name = s.replace('_', " ")  # .replace('.service', '')
         state = services.get_status(s)['status']
         # "active", "inactive", "failed", etc.
         if state == "active":
@@ -42,7 +42,8 @@ def __service_info():
             icon = icon_off
         else:
             icon = icon_failed
-        info += f"{name}{icon}  "
+        # info += f"{name}{icon}  "
+        info += f"{icon} {name}\n"
     return info
 
 
@@ -53,9 +54,9 @@ def __build_keyboard():
     snapshot_btn = [
         InlineKeyboardButton(text="Print area", callback_data="snapshots")]
 
-    status_text = "*Server status and printer information*\n\n"
-    status_text += f"{__service_info()}\n\n"
-    status_text += "*Consumption*\n"
+    status_text = "*Server status and printer information*\n"
+    status_text += f"{__service_info()}\n"
+    status_text += "_Consumption_\n"
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
         # sys.stdout.write(f"{data['name']} - {data['url']}: {pwr}\n")
