@@ -1,11 +1,15 @@
-<!-- begin: update 4 statuses script -->
+<!-- begin: functions for 3 devices -->
+{% include "includes/component_js_toggle.htm" %}
 <script>
-async function update4Statuses() {
+async function update3Statuses() {
     try {
         const response = await fetch(`{{ pfx }}{{ status_path }}`);
         const data = await response.json();
         if (response.ok) {
-            const devices = Object.entries(data.devices);
+            const totPwrSpan = document.getElementById(`pwr`);
+            totPwrSpan.textContent = `Current total power consumption: ${data.devices.main.power || 0}W`;
+
+            const devices = [...Object.entries(data.devices).slice(0, 2), ...Object.entries(data.devices).slice(3)];
             for (const [deviceId, device] of devices) {
                 const button = document.getElementById(deviceId);
                 const stateSpan = document.getElementById(`state-${deviceId}`);
@@ -21,8 +25,8 @@ async function update4Statuses() {
     }
 }
 
-window.onload = update4Statuses;
+window.onload = update3Statuses;
 // refresh
-setInterval(update4Statuses, 6000);
+setInterval(update3Statuses, 5000);
 </script>
-<!-- end: update 4 statuses script -->
+<!-- end: functions for 3 devices -->

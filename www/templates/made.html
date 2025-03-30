@@ -1,19 +1,27 @@
-{% include 'includes/page_header.htm' %}
+{% include 'includes/component_page_header.htm' %}
 <div class="col">
-        {% include 'includes/content_info.htm' %}
+    <div class="row">
+        <div class="col">
+            <h5 class="text-center">{{ info }}</h5>
+        </div>
+    </div>
 </div>
     <!-- main content -->
     <div class="container my-4">
         <div class="row justify-content-center justify-content-around">
             <div class="col">
-                {% include 'includes/block_gallery.htm' %}
+                {% include 'includes/component_gallery.htm' %}
             </div>
         </div>
     </div>
     <!-- end main content -->
     <div class="col">
-        {% include 'includes/content_info.htm' %}
+        <div class="row">
+            <div class="col">
+                <h5 class="text-center">{{ info }}</h5>
+            </div>
+        </div>
     </div>
     <div class="row"></div>
 </div>
-{% include 'includes/page_footer.htm' %}
+{% include 'includes/component_page_footer.htm' %}
