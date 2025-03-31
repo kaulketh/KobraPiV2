@@ -1,61 +1,98 @@
 <div class="card text-bg-light mb-3 text-justify" style="border: none">
-  <div class="row g-0">
-    <div class="col-md-4">
-        <div class="p-3 border border-3 border-secondary shadow-lg rounded">
-            <img src="{{ url_for('static', filename='images/dc_n_c_II.png')}}" class="img-fluid rounded-start" alt="dc_n_c_II.png">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <div class="p-3 border border-3 border-secondary shadow-lg rounded">
+                <img src="{{ url_for('static', filename='images/dc_n_c_II.png') }}"
+                     class="img-fluid rounded-start" alt="dc_n_c_II.png">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-subtitle mb-2 text-muted">what kind of
+                    project</h5>
+                <p class="card-text">As a hobby, I deal with 3D printing,
+                    programming, microcontrollers and single-board computers
+                    and plan to use this server here to control and monitor a
+                    3D printer. It already runs a power consumption monitor
+                    including automatic shutdown of the printer, a temperature
+                    monitor including fan control for the server and this self
+                    programmed website here in a flask-gunicorn framework.<br>
+                    Sockets switchable via Wi-Fi, flashed with
+                    <a href="https://bit.ly/tasmota"
+                       target="_blank">Tasmota</a>
+                    to control power and for consumption measurement, and
+                    self-built Esp32 Wi-Fi cameras are also used.<br>
+                    I have implemented the usage of the
+                    <a href="https://telegram.org/"
+                       target="_blank">Telegram</a>
+                    bot API to monitor and control printer and server.<br>
+                    I like Python, taught myself and use Pycharm as IDE and
+                    <a href="https://github.com/" target="_blank">GitHub</a>
+                    as code repository.
+                </p>
+                <h5 class="card-subtitle mb-2 text-muted">worldwide
+                    problem</h5>
+                <p class="card-text">Since I'm “stuck” behind a CG-NAT with my
+                    internet provider and don't get a public IP, I decided to
+                    rent a virtual private server from
+                    <a href="https://www.ionos.de/server/vps" target="_blank">IONOS</a>
+                    and redirect my
+                    <a href="https://www.noip.com" target="_blank">NoIP</a>
+                    domain to that VPS and I have added all the necessary
+                    devices to a virtual private network from
+                    <a href="https://www.zerotier.com/" target="_blank">ZeroTier.</a>
+                    Via that VPN I have worldwide access to my devices,
+                    including this Raspberry Pi as print server.
+                </p>
+                <h5 class="card-subtitle mb-2 text-muted">why this name</h5>
+                <p class="card-text">As a little play on words, I named this
+                    server KobraPi because my 3D printer is an
+                    <a href="https://store.anycubic.com/collections/fdm-printer/products/kobra-2-plus"
+                       target="_blank">Anycubic Kobra 2 Plus</a>
+                    and the printer server is a
+                    <a href="https://www.raspberrypi.org/" target="_blank">Raspberry Pi.</a><br>
+                    Why am I doing this?<br>
+                    Because I can do it and I really want to learn more, just
+                    for fun.<br>
+                    Incidentally, my nickname is based on a similar play on
+                    words ;-)
+                </p>
+                <h5 class="card-subtitle mb-2 text-muted">maybe later</h5>
+                <p class="card-text">There may be more about me later. This
+                    project is still private, which may change.<br>
+                    We will see.
+                </p>
+                <p>Sincerely yours<br>D3adCow1220</p>
+            </div>
         </div>
     </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-subtitle mb-2 text-muted">what kind of project</h5>
-        <p class="card-text">As a hobby, I deal with 3D printing, programming,
-            microcontrollers and single-board computers and plan to use this
-            server here to control and monitor a 3D printer. It already runs
-            a power consumption monitor including automatic shutdown of the
-            printer, a temperature monitor including fan control for the server
-            and this self programmed website here in a flask-gunicorn
-            framework.<br>
-            Sockets switchable via Wi-Fi, flashed with
-            <a href="https://bit.ly/tasmota" target="_blank">Tasmota</a>
-             to control power and for consumption measurement, and self-built
-            Esp32 Wi-Fi cameras are also used.<br>
-            I have implemented the usage of the
-            <a href="https://telegram.org/" target="_blank">Telegram</a>
-             bot API to monitor and control printer and server.<br>
-            I like Python, taught myself and use Pycharm as IDE and
-            <a href="https://github.com/" target="_blank">GitHub</a>
-             as code repository.
-        </p>
-        <h5 class="card-subtitle mb-2 text-muted">worldwide problem</h5>
-        <p class="card-text">Since I'm “stuck” behind a CG-NAT with my internet
-            provider and don't get a public IP, I decided to rent a virtual
-            private server from
-            <a href="https://www.ionos.de/server/vps" target="_blank">IONOS</a>
-             and redirect my
-            <a href="https://www.noip.com" target="_blank">NoIP</a>
-             domain to that VPS and I have added all the necessary devices
-            to a virtual private network from
-            <a href="https://www.zerotier.com/" target="_blank">ZeroTier.</a>
-            Via that VPN I have worldwide access to my devices, including this
-            Raspberry Pi as print server.
-        </p>
-        <h5 class="card-subtitle mb-2 text-muted">why this name</h5>
-        <p class="card-text">As a little play on words, I named this server
-            KobraPi because my 3D printer is an
-            <a href="https://store.anycubic.com/collections/fdm-printer/products/kobra-2-plus" target="_blank">Anycubic Kobra 2 Plus</a>
-             and the printer server is a
-            <a href="https://www.raspberrypi.org/" target="_blank">Raspberry Pi.</a><br>
-            Why am I doing this?<br>
-            Because I can do it and I really want to learn more, just for fun.<br>
-            Incidentally, my nickname is based on a similar play on words ;-)
-        </p>
-        <h5 class="card-subtitle mb-2 text-muted">maybe later</h5>
-        <p class="card-text">There may be more about me later. This project
-            is still private, which may change.<br>
-            We will see.
-        </p>
-        <p>Sincerely yours<br>D3adCow1220</p>
-      </div>
+</div>
+<div class="card text-bg-light mb-3 text-justify" style="border: none">
+    <div class="row g-0">
+
+        <div class="card-body">
+            <h3 class="card-subtitle">useless knowledge</h3><br>
+            <h4 class="card-subtitle mb-2 text-muted">Austria: Dead cow, Cobra
+                needed 7 shots - Uproar over
+                poor hit rate</h4>
+            <p class="card-text">13.Dec 2019<br>
+            </p>
+            <p class="card-text">Excitement online because the Austrian Cobra
+                needed several attempts to shoot down a cow.
+                Studies have shown that “normal” police officers have a hit
+                rate of just 20 percent when using their weapon on duty.
+                However, the fact that members of the Cobra special task
+                force do not appear to be much more accurate is new. They
+                are said to have needed seven shots in <i>Matrei am
+                    Brenner</i> to
+                incapacitate an escaped cow. This is being hotly debated on
+                social media and the Cobra are being criticized.
+            </p>
+            <p class="card-text">
+                <a href="https://www.oe24.at/oesterreich/chronik/tirol/tote-kuh-cobra-brauchte-7-schuesse/409321985"
+                   target="_blank">Austrian source</a>
+            </p>
+        </div>
+
     </div>
-  </div>
 </div>
