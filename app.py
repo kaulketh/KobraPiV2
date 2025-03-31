@@ -6,7 +6,7 @@ import time
 
 import psutil
 import requests
-from PIL import Image
+from PIL import Image, ExifTags
 from flask import Flask, jsonify, Blueprint, render_template, redirect, \
     url_for
 from flask_cors import CORS
@@ -34,6 +34,7 @@ kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
 
 # setup gallery
+global img_orientation
 GALLERY = os.path.join(app.static_folder, 'gallery')
 THUMBS = os.path.join(GALLERY, 'thumbs')
 os.makedirs(THUMBS, exist_ok=True)
@@ -42,11 +43,31 @@ gallery.sort(reverse=True)
 thumbs = []
 
 
+def __correct_orientation(image_path):
+    global img_orientation
+    image = Image.open(image_path)
+    try:
+        for img_orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[img_orientation] == 'Orientation':
+                break
+        exif = image.getexif()
+        if exif is not None and img_orientation in exif:
+            if exif[img_orientation] == 3:
+                image = image.rotate(180, expand=True)
+            elif exif[img_orientation] == 6:
+                image = image.rotate(270, expand=True)
+            elif exif[img_orientation] == 8:
+                image = image.rotate(90, expand=True)
+    except (AttributeError, KeyError, IndexError):
+        pass
+    return image
+
+
 def __create_thumbnail(image_path, thumbnail_path, size=(200, 150)):
-    """create thumbnail for each gallery image."""
-    with Image.open(image_path) as img:
-        img.thumbnail(size)
-        img.save(thumbnail_path)
+    """correct orientation and create thumbnail for each gallery image."""
+    img = __correct_orientation(image_path)
+    img.thumbnail(size)
+    img.save(thumbnail_path)
 
 
 for filename in gallery:
