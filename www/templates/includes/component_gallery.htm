@@ -1,10 +1,13 @@
 <div class="row gallery">
-        {% for image in thumbnails %}
+    {% for image in thumbnails %}
         <div class="col-md-4 col-sm-6 mb-4">
-            <a href="{{ url_for('static', filename='gallery/' + image) }}" target="_blank">
-                <img src="{{ url_for('static', filename='gallery/thumbs/' + image) }}" class="img-fluid rounded shadow-sm" alt="{{ image }}">
+            <a href="{{ url_for('static', filename='gallery/' + image) }}"
+               data-lightbox="gallery" data-title="{{ image | gallery_image }}">
+                <img src="{{ url_for('static', filename='gallery/thumbs/' + image) }}"
+                     class="img-fluid rounded shadow-sm" alt="{{ image }}">
             </a>
             <p class="text-center mt-2">{{ image | gallery_image | safe }} </p>
         </div>
-        {% endfor %}
+    {% endfor %}
 </div>
+
