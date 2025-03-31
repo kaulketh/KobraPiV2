@@ -160,35 +160,11 @@ def on_message(msg):
     text = msg.get("text", "")
     if admin(cid):
         sys.stdout.write(f"Message from {cid}: {text}\n")
-        # Telegram in-app commands (refer 'app_commands.list')
         if text in {"start", "/start", "/status", "status", "/state", "state"}:
             # pass
             state_update(cid)
         else:
             kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
-
-        # if text == "/reboot":
-        #     kobra_bot.sendMessage(cid, "Reboot device.")
-        #     os.system("sudo reboot")
-        # if text == "/restart":
-        #     kobra_bot.sendMessage(cid, "Restart bot service.")
-        #     services.restart(srvcs[2])
-        # if text == "/stop":
-        #     kobra_bot.sendMessage(cid, "Stop bot service.")
-        #     services.stop(srvcs[2])
-        # if text == "/restart_power":
-        #     kobra_bot.sendMessage(cid, "Restart consumption observer.")
-        #     services.restart(srvcs[1])
-        # if text == "/stop_power":
-        #     kobra_bot.sendMessage(cid, "Stop consumption observer.")
-        #     services.stop(srvcs[1])
-        # if text == "/restart_webserver":
-        #     kobra_bot.sendMessage(cid, "Restart web server.")
-        #     services.restart(srvcs[0])
-        # if text == "/stop_webserver":
-        #     kobra_bot.sendMessage(cid, "Stop web server.")
-        #     services.stop(srvcs[0])
-        # state_update(cid)
     else:
         kobra_bot.sendMessage(cid, emoticon_worried)
 
