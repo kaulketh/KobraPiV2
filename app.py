@@ -77,6 +77,16 @@ def inject_context():
     )
 
 
+# custom jinja2 filter
+@kobra_bp.app_template_filter('gallery_image')
+def gallery_image(file):
+    name, _ = file.rsplit('.', 1)  # remove extension
+    parts = name.split(' ', 1)  # split after 1st space
+    if len(parts) == 2:
+        return f"{parts[0]}<br>{parts[1]}"
+    return parts[0]  # if no spaces name
+
+
 # GET requests
 @kobra_bp.route(ABOUT.path, methods=['GET'])
 def about():
@@ -210,8 +220,9 @@ def status():
     )
 
 
-# Register kobra blueprint for run
+# Register kobra blueprint and filter for run
 app.register_blueprint(kobra_bp)
+app.jinja_env.filters['gallery_image'] = gallery_image
 
 # Message Gunicorn's workers start
 if os.getpid() % workers == 0:

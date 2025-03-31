@@ -4,13 +4,7 @@
             <a href="{{ url_for('static', filename='gallery/' + image) }}" target="_blank">
                 <img src="{{ url_for('static', filename='gallery/thumbs/' + image) }}" class="img-fluid rounded shadow-sm" alt="{{ image }}">
             </a>
-            <p class="text-center mt-2">{{ (image.split('.')[0]).split(' ')[0] }}<br>
-                {% for element in (image.split('.')[0]).split(' ') %}
-                    {% if loop.index > 1 %}
-                        {{ element }}
-                    {% endif %}
-                {% endfor %}
-            </p>
+            <p class="text-center mt-2">{{ image | gallery_image | safe }} </p>
         </div>
         {% endfor %}
 </div>
