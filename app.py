@@ -105,7 +105,7 @@ def gallery_image(file):
     parts = name.split(' ', 1)  # split after 1st space
     if len(parts) == 2:
         return f"{parts[0]}<br>{parts[1]}"
-    return parts[0]  # if no spaces name
+    return parts[0]  # name if no spaces
 
 
 # GET requests
