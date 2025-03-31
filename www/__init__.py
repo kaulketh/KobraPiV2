@@ -45,8 +45,8 @@ CAMS = AttrDict({__K.pth: f"{SLASH}cams",
                  __K.nav: "live",
                  __K.tit: "live streams",
                  __K.nfo: "Turned off!",
-                 __K.hnt: "Please make sure that the streams "
-                          "have only been accessed once!"
+                 __K.hnt: "Please make sure that these streams "
+                          "have only been accessed ONCE!"
                  })
 
 POWER = AttrDict({__K.pth: f"{SLASH}power",
