@@ -48,6 +48,15 @@ CAMS = AttrDict({__K.pth: f"{SLASH}cams",
                           "have only been accessed ONCE!"
                  })
 
+PRIVAT = AttrDict({__K.pth: f"{SLASH}privacy",
+                   __K.id: "privacy",
+                   __K.tmpt: f"privacy{__EXT}",
+                   __K.nav: "imprint",
+                   __K.tit: "legal notice | privacy policy",
+                   __K.nfo: __EMPTY,
+                   __K.hnt: __EMPTY
+                   })
+
 POWER = AttrDict({__K.pth: f"{SLASH}power",
                   __K.id: "power",
                   __K.tmpt: f"power{__EXT}",
@@ -93,5 +102,6 @@ NAVI = [
     {__K.name: CAMS.navi, __K.ep: f"{ROOT}.{CAMS.id}", __K.id: CAMS.id},
     {__K.name: SRVCS.navi, __K.ep: f"{ROOT}.{SRVCS.id}", __K.id: SRVCS.id},
     {__K.name: ABOUT.navi, __K.ep: f"{ROOT}.{ABOUT.id}", __K.id: ABOUT.id},
-    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id}
+    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id},
+    {__K.name: PRIVAT.navi, __K.ep: f"{ROOT}.{PRIVAT.id}", __K.id: PRIVAT.id}
 ]

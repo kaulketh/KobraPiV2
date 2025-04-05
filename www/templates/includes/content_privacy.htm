@@ -1,0 +1,185 @@
+<style>
+  .tabs, .language-switch {
+    display: flex;
+    margin-bottom: 1em;
+  }
+
+  .tabs {
+    border-bottom: 2px solid #ccc;
+  }
+
+  .tab-button, .lang-button {
+    padding: 0.5em 1em;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-weight: bold;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.3s;
+  }
+
+  .tab-button.active {
+    border-bottom: 3px solid #007BFF;
+    color: #007BFF;
+  }
+
+  .lang-button {
+    margin-left: auto;
+    {#border: 1px solid #ccc;#}
+    {#border-radius: 5px;#}
+    font-size: 0.9em;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .lang-de, .lang-en {
+    display: none;
+  }
+
+  .lang-de.active,
+  .lang-en.active {
+    display: block;
+  }
+
+  .tab-content a {
+    color: #007BFF;
+  }
+</style>
+
+<div class="tabs">
+  <button class="tab-button active" onclick="showTab('impressum')">Impressum</button>
+  <button class="tab-button" onclick="showTab('datenschutz')">Datenschutz</button>
+  <button class="lang-button" onclick="toggleLanguage()"><img src="{{ url_for('static', filename='images/de_en.jpg')}}" alt="EN" width="30" height="20">
+</button>
+</div>
+
+<!-- IMPRESSUM -->
+<div id="impressum" class="tab-content active">
+  <div class="lang-de active">
+    <h2>Impressum</h2>
+    <p><strong>Angaben gemäß § 5 TMG:</strong><br>
+      Thomas Kaulke<br>
+      Gartenfließstraße 1<br>
+      15890 Eisenhüttenstadt<br>
+      Deutschland<br><br>
+      E-Mail: kaulketh at gmail.com
+    </p>
+    <p><strong>Hinweis:</strong><br>
+      Dies ist eine rein private Website ohne kommerziellen Hintergrund. Sie dient ausschließlich der Darstellung privater Projekte und Hobbys.
+    </p>
+  </div>
+  <div class="lang-en">
+    <h2>Legal Notice</h2>
+    <p><strong>Information according to § 5 TMG:</strong><br>
+      Thomas Kaulke<br>
+      Gartenfliessstrasse 1<br>
+      15890 Eisenhuettenstadt<br>
+      Germany<br><br>
+      E-Mail: kaulketh at gmail.com
+    </p>
+    <p><strong>Note:</strong><br>
+      This is a purely private, non-commercial website. It is intended solely to present personal hobby projects.
+    </p>
+  </div>
+</div>
+
+<!-- DATENSCHUTZ -->
+<div id="datenschutz" class="tab-content">
+  <div class="lang-de active">
+    <h2>Datenschutzerklärung</h2>
+    <p><strong>1. Allgemeine Hinweise</strong><br>
+      Diese Website dient ausschließlich privaten und nicht-kommerziellen Zwecken. Es werden keine personenbezogenen Daten der Besucher erfasst oder gespeichert.
+    </p>
+    <p><strong>2. Verantwortlicher</strong><br>
+      Thomas Kaulke<br>
+      Gartenfließstraße 1<br>
+      15890 Eisenhüttenstadt<br>
+      Deutschland<br>
+      E-Mail: kaulketh at gmail.com
+    </p>
+    <p><strong>3. Erhebung und Speicherung personenbezogener Daten</strong><br>
+      Diese Webseite verwendet keine Analyse-Tools, keine Cookies, kein Kontaktformular und kein Benutzer-Tracking.
+    </p>
+    <p><strong>4. Server-Hosting</strong><br>
+      Die Seite wird über einen privaten Raspberry Pi betrieben, der per VPN (ZeroTier) mit einem VPS von
+      <a href="https://www.ionos.de/" target="_blank">IONOS</a> verbunden ist. Weitere Infos siehe
+      <a href="https://www.ionos.de/terms-gtc/datenschutzerklaerung/" target="_blank">IONOS Datenschutzerklärung</a>.
+    </p>
+    <p><strong>5. Verlinkungen auf externe Seiten</strong><br>
+      Diese Webseite enthält Links zu:<br>
+      <a href="https://tasmota.github.io/" target="_blank">Tasmota</a>,
+      <a href="https://www.raspberrypi.org/" target="_blank">Raspberry Pi</a>,
+      <a href="https://www.zerotier.com/" target="_blank">ZeroTier</a>,
+      <a href="https://github.com/" target="_blank">GitHub</a>,
+      <a href="https://www.anycubic.com/" target="_blank">Anycubic</a>,
+      <a href="https://www.noip.com/" target="_blank">NoIP</a>,
+      <a href="https://www.telegram.org/" target="_blank">Telegram</a>.
+    </p>
+
+    <p><strong>6. Rechte der Nutzer</strong><br>
+      Da keine personenbezogenen Daten erfasst werden, ergeben sich keine Rechte auf Auskunft, Löschung oder Berichtigung.
+    </p>
+    <p><strong>7. Cookies</strong><br>
+    Diese Website verwendet keinerlei Cookies oder vergleichbare Technologien zur Wiedererkennung von Nutzern.
+    </p>
+
+  </div>
+  <div class="lang-en">
+    <h2>Privacy Policy</h2>
+    <p><strong>1. General Information</strong><br>
+      This website is for private, non-commercial use only. No personal data is collected or stored.
+    </p>
+    <p><strong>2. Responsible Person</strong><br>
+      Thomas Kaulke<br>
+      Gartenfliessstrasse 1<br>
+      15890 Eisenhuettenstadt<br>
+      Germany<br>
+      E-Mail: kaulketh at gmail.com
+    </p>
+    <p><strong>3. Data Collection</strong><br>
+      This site uses no analytics tools, cookies, contact forms, or user tracking.
+    </p>
+    <p><strong>4. Server Hosting</strong><br>
+      The site is hosted on a private Raspberry Pi, connected via VPN (ZeroTier) to a VPS provided by
+      <a href="https://www.ionos.com/" target="_blank">IONOS</a>. See also the
+      <a href="https://www.ionos.com/terms-gtc/privacy-policy/" target="_blank">IONOS privacy policy</a>.
+    </p>
+    <p><strong>5. External Links</strong><br>
+      This site links to:<br>
+      <a href="https://tasmota.github.io/" target="_blank">Tasmota</a>,
+      <a href="https://www.raspberrypi.org/" target="_blank">Raspberry Pi</a>,
+      <a href="https://www.zerotier.com/" target="_blank">ZeroTier</a>,
+      <a href="https://github.com/" target="_blank">GitHub</a>,
+      <a href="https://www.anycubic.com/" target="_blank">Anycubic</a>,
+      <a href="https://www.noip.com/" target="_blank">NoIP</a>,
+      <a href="https://www.telegram.org/" target="_blank">Telegram</a>.
+    </p>
+    <p><strong>6. User Rights</strong><br>
+      Since no personal data is collected, there are no applicable rights regarding access, deletion, or correction.
+    </p>
+    <p><strong>7. Cookies</strong><br>
+        This website does not use any cookies or similar technologies to identify users.
+    </p>
+
+  </div>
+</div>
+
+<script>
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.tab-button[onclick="showTab(\'' + tabId + '\')"]').classList.add('active');
+  }
+
+  function toggleLanguage() {
+    document.querySelectorAll('.lang-de, .lang-en').forEach(el => el.classList.toggle('active'));
+  }
+</script>

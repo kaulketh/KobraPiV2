@@ -17,7 +17,7 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, SLASH
+    POWER, STATUS, NAVI, ROOT, SLASH, PRIVAT
 
 VERSION = "v2"
 
@@ -158,6 +158,14 @@ def power():
         active_page=POWER.id,
         devices=devs,
         title=POWER.title)
+
+
+@kobra_bp.route(PRIVAT.path, methods=['GET'])
+def privacy():
+    return render_template(
+        PRIVAT.template,
+        active_page=PRIVAT.id,
+        title=PRIVAT.title)
 
 
 @kobra_bp.route(SRVCS.path, methods=['GET'])
