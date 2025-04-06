@@ -1,0 +1,48 @@
+<style>
+    .tabs {
+        display: flex;
+        margin-bottom: 1em;
+        border-bottom: 2px solid #ccc;
+    }
+
+    .tab-button, .lang-button {
+        padding: 0.5em 1em;
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-weight: bold;
+        border-bottom: 3px solid transparent;
+        transition: border-color 0.3s;
+    }
+
+    .tab-button.active {
+        border-bottom: 3px solid #007BFF;
+        color: #007BFF;
+    }
+
+    .lang-button {
+        margin-left: auto;
+    {#border: 1px solid #ccc;#}{#border-radius: 5px;#} font-size: 0.9em;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .lang-de, .lang-en {
+        display: none;
+    }
+
+    .lang-de.active,
+    .lang-en.active {
+        display: block;
+    }
+
+    .tab-content a {
+        color: #007BFF;
+    }
+</style>
