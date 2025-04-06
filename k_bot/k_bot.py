@@ -195,7 +195,7 @@ def main():
     def handle_update(update):
         # if 'my_chat_member' in update:
         #     sys.stderr.write(f"Ignoring 'my_chat_member' update: {update}\n")
-        #     return  # avoid chrash
+        #     return  # avoid crash
         if 'message' in update:
             on_message(update['message'])
         elif 'callback_query' in update:
