@@ -12,10 +12,10 @@ class AttrDict(dict):
 
 
 ROOT = "kobra"
-# ROOT = "newKobraPi"
 WIP = "[ work in progress ]"
 UNDER_CONSTR = "[ under construction ]"
 SLASH = "/"
+REPO = "https://github.com/kaulketh/KobraPiV2"
 
 __EXT = ".html"
 __EMPTY = ""
@@ -34,7 +34,7 @@ INDEX = AttrDict({__K.pth: SLASH,
                   __K.id: "index",
                   __K.tmpt: f"index{__EXT}",
                   __K.nav: "start",
-                  __K.tit: "a dead cow and a kobra",
+                  __K.tit: "a dead cow and a kobra OR three W and a M",
                   __K.nfo: __EMPTY,
                   __K.hnt: __EMPTY
                   })
@@ -45,9 +45,18 @@ CAMS = AttrDict({__K.pth: f"{SLASH}cams",
                  __K.nav: "live",
                  __K.tit: "live streams",
                  __K.nfo: "Turned off!",
-                 __K.hnt: "Please make sure that the streams "
-                          "have only been accessed once!"
+                 __K.hnt: "Please make sure that these streams "
+                          "have only been accessed ONCE!"
                  })
+
+PRIVAT = AttrDict({__K.pth: f"{SLASH}privacy",
+                   __K.id: "privacy",
+                   __K.tmpt: f"privacy{__EXT}",
+                   __K.nav: __EMPTY,  # "imprint",
+                   __K.tit: __EMPTY,  # "legal notice & privacy policy",
+                   __K.nfo: __EMPTY,
+                   __K.hnt: __EMPTY
+                   })
 
 POWER = AttrDict({__K.pth: f"{SLASH}power",
                   __K.id: "power",
@@ -80,18 +89,20 @@ MADE = AttrDict({__K.pth: f"{SLASH}made",
                  __K.tmpt: f"made{__EXT}",
                  __K.nav: "made",
                  __K.id: "made",
-                 __K.tit: "made in and for 3d",
-                 __K.nfo: UNDER_CONSTR,
+                 __K.tit: "made in and for 3D",
+                 __K.nfo: WIP,
                  __K.hnt: __EMPTY
                  })
 
 STATUS = AttrDict({__K.pth: f"{SLASH}status"})
 
+# navigation elements order
 NAVI = [
     {__K.name: INDEX.navi, __K.ep: f"{ROOT}.{INDEX.id}", __K.id: INDEX.id},
-    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id},
     {__K.name: POWER.navi, __K.ep: f"{ROOT}.{POWER.id}", __K.id: POWER.id},
     {__K.name: CAMS.navi, __K.ep: f"{ROOT}.{CAMS.id}", __K.id: CAMS.id},
     {__K.name: SRVCS.navi, __K.ep: f"{ROOT}.{SRVCS.id}", __K.id: SRVCS.id},
-    {__K.name: ABOUT.navi, __K.ep: f"{ROOT}.{ABOUT.id}", __K.id: ABOUT.id}
+    {__K.name: ABOUT.navi, __K.ep: f"{ROOT}.{ABOUT.id}", __K.id: ABOUT.id},
+    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id},
+    {__K.name: PRIVAT.navi, __K.ep: f"{ROOT}.{PRIVAT.id}", __K.id: PRIVAT.id}
 ]

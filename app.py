@@ -6,6 +6,7 @@ import time
 
 import psutil
 import requests
+from PIL import Image, ExifTags
 from flask import Flask, jsonify, Blueprint, render_template, redirect, \
     url_for
 from flask_cors import CORS
@@ -16,9 +17,9 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, SLASH
+    POWER, STATUS, NAVI, ROOT, SLASH, PRIVAT, REPO
 
-VERSION = "V2"
+VERSION = "v2"
 
 # Flask configuration
 APPLICATION_ROOT = f"{SLASH}{ROOT}"
@@ -31,8 +32,56 @@ app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
 CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
-gallery = os.listdir(os.path.join(app.static_folder, "gallery"))
 
+# setup gallery
+global img_orientation
+GALLERY = os.path.join(app.static_folder, 'gallery')
+THUMBS = os.path.join(GALLERY, 'thumbs')
+os.makedirs(THUMBS, exist_ok=True)
+gallery = os.listdir(GALLERY)
+gallery.sort(reverse=True)
+thumbs = []
+
+
+def __correct_orientation(image_path):
+    global img_orientation
+    image = Image.open(image_path)
+    try:
+        for img_orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[img_orientation] == 'Orientation':
+                break
+        exif = image.getexif()
+        if exif is not None and img_orientation in exif:
+            if exif[img_orientation] == 3:
+                image = image.rotate(180, expand=True)
+            elif exif[img_orientation] == 6:
+                image = image.rotate(270, expand=True)
+            elif exif[img_orientation] == 8:
+                image = image.rotate(90, expand=True)
+    except (AttributeError, KeyError, IndexError):
+        pass
+    return image
+
+
+def __create_thumbnail(image_path, thumbnail_path, size=(200, 150)):
+    """correct orientation and create thumbnail for each gallery image."""
+    img = __correct_orientation(image_path)
+    img.thumbnail(size)
+    img.save(thumbnail_path)
+
+
+for filename in gallery:
+    if filename.endswith(('.jpg', '.png', '.jpeg', '.gif')):
+        full_path = os.path.join(GALLERY, filename)
+        thumb_path = os.path.join(THUMBS, filename)
+        # create thumbnail if not exists
+        if not os.path.exists(thumb_path):
+            __create_thumbnail(full_path, thumb_path)
+        thumbs.append(filename)
+    thumbs.sort()
+
+
+# end setup gallery
 
 # Server routes
 # make available in all routes
@@ -44,11 +93,23 @@ def inject_context():
         status_path=STATUS.path,
         pfx=APPLICATION_ROOT,
         images=images,
-        gallery=gallery
+        gallery=gallery,
+        thumbnails=thumbs,
+        repo=REPO
     )
 
 
-# page requests
+# custom jinja2 filter
+@kobra_bp.app_template_filter('gallery_image')
+def gallery_image(file):
+    name, _ = file.rsplit('.', 1)  # remove extension
+    parts = name.split(' ', 1)  # split after 1st space
+    if len(parts) == 2:
+        return f"{parts[0]}<br>{parts[1]}"
+    return parts[0]  # name if no spaces
+
+
+# GET requests
 @kobra_bp.route(ABOUT.path, methods=['GET'])
 def about():
     return render_template(
@@ -98,6 +159,14 @@ def power():
         active_page=POWER.id,
         devices=devs,
         title=POWER.title)
+
+
+@kobra_bp.route(PRIVAT.path, methods=['GET'])
+def privacy():
+    return render_template(
+        PRIVAT.template,
+        active_page=PRIVAT.id,
+        title=PRIVAT.title)
 
 
 @kobra_bp.route(SRVCS.path, methods=['GET'])
@@ -181,8 +250,9 @@ def status():
     )
 
 
-# Register kobra blueprint for run
+# Register kobra blueprint and filter for run
 app.register_blueprint(kobra_bp)
+app.jinja_env.filters['gallery_image'] = gallery_image
 
 # Message Gunicorn's workers start
 if os.getpid() % workers == 0:

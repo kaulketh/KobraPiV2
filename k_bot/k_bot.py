@@ -28,12 +28,15 @@ icon_off = "\U000026AA"  # heavy white
 icon_on = "\U0001F7E0"  # orange
 icon_failed = "\U00002B55"  # heavy red
 icon_active = "\U0001F7E2"  # green
+emoticon_confused = "\U0001F615"
+emoticon_rolling_eyes = "\U0001F644"
+emoticon_worried = "\U0001F61F"
 
 
 def __service_info():
-    info = "*Services*\n"
+    info = "_Services_\n"
     for s in srvcs:
-        name = s.replace('_', " ").replace('.service', '')
+        name = s.replace('_', " ")  # .replace('.service', '')
         state = services.get_status(s)['status']
         # "active", "inactive", "failed", etc.
         if state == "active":
@@ -42,7 +45,8 @@ def __service_info():
             icon = icon_off
         else:
             icon = icon_failed
-        info += f"{name}{icon}  "
+        # info += f"{name}{icon}  "
+        info += f"{icon} {name}\n"
     return info
 
 
@@ -53,9 +57,9 @@ def __build_keyboard():
     snapshot_btn = [
         InlineKeyboardButton(text="Print area", callback_data="snapshots")]
 
-    status_text = "*Server status information*\n\n"
-    status_text += f"{__service_info()}\n\n"
-    status_text += "*Consumption*\n"
+    status_text = "*Server status and printer information*\n"
+    status_text += f"{__service_info()}\n"
+    status_text += "_Consumption_\n"
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
         # sys.stdout.write(f"{data['name']} - {data['url']}: {pwr}\n")
@@ -156,31 +160,13 @@ def on_message(msg):
     text = msg.get("text", "")
     if admin(cid):
         sys.stdout.write(f"Message from {cid}: {text}\n")
-        # Telegram in-app commands (refer 'app_commands.list')
-        if text in {"start", "/start", "/status", "/state"}:
-            pass
-        # if text == "/reboot":
-        #     kobra_bot.sendMessage(cid, "Reboot device.")
-        #     os.system("sudo reboot")
-        if text == "/restart":
-            kobra_bot.sendMessage(cid, "Restart bot service.")
-            services.restart(srvcs[2])
-        if text == "/stop":
-            kobra_bot.sendMessage(cid, "Stop bot service.")
-            services.stop(srvcs[2])
-        if text == "/restart_power":
-            kobra_bot.sendMessage(cid, "Restart consumption observer.")
-            services.restart(srvcs[1])
-        if text == "/stop_power":
-            kobra_bot.sendMessage(cid, "Stop consumption observer.")
-            services.stop(srvcs[1])
-        if text == "/restart_webserver":
-            kobra_bot.sendMessage(cid, "Restart web server.")
-            services.restart(srvcs[0])
-        if text == "/stop_webserver":
-            kobra_bot.sendMessage(cid, "Stop web server.")
-            services.stop(srvcs[0])
-    state_update(cid)
+        if text in {"start", "/start", "/status", "status", "/state", "state"}:
+            # pass
+            state_update(cid)
+        else:
+            kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
+    else:
+        kobra_bot.sendMessage(cid, emoticon_worried)
 
 
 def on_callback_query(msg):

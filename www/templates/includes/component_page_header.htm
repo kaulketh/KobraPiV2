@@ -2,10 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Raspberry Pi 3D Printer Control Webserver</title>
+    <title>3D Printer Control- and Web-Server</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favico/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favico/favicon-32x32.png') }}">
@@ -13,7 +15,11 @@
     <link rel="manifest" href="{{ url_for('static', filename='favico/site.webmanifest') }}">
 </head>
 <body>
-{% include 'jn/block_navi.htm' %}
+{% include 'includes/component_navigation.htm' %}
 <div class="container">
-    {% include 'jn/content_title.htm' %}
+    <div class="col">
+        <div class="row"></div>
+        <div class="row"></div>
+        <h2 class="text-center">{{ title }}</h2>
+    </div>
 <!-- end: page top block -->
