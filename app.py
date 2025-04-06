@@ -17,7 +17,7 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, SLASH, PRIVAT
+    POWER, STATUS, NAVI, ROOT, SLASH, PRIVAT, REPO
 
 VERSION = "v2"
 
@@ -94,7 +94,8 @@ def inject_context():
         pfx=APPLICATION_ROOT,
         images=images,
         gallery=gallery,
-        thumbnails=thumbs
+        thumbnails=thumbs,
+        repo=REPO
     )
 
 

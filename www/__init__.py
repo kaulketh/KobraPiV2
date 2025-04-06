@@ -15,6 +15,7 @@ ROOT = "kobra"
 WIP = "[ work in progress ]"
 UNDER_CONSTR = "[ under construction ]"
 SLASH = "/"
+REPO = "https://github.com/kaulketh/KobraPiV2"
 
 __EXT = ".html"
 __EMPTY = ""
@@ -51,8 +52,8 @@ CAMS = AttrDict({__K.pth: f"{SLASH}cams",
 PRIVAT = AttrDict({__K.pth: f"{SLASH}privacy",
                    __K.id: "privacy",
                    __K.tmpt: f"privacy{__EXT}",
-                   __K.nav: "imprint",
-                   __K.tit: "legal notice | privacy policy",
+                   __K.nav: __EMPTY,  # "imprint",
+                   __K.tit: __EMPTY,  # "legal notice & privacy policy",
                    __K.nfo: __EMPTY,
                    __K.hnt: __EMPTY
                    })
