@@ -1,5 +1,27 @@
-<!-- begin: functions for 3 devices -->
-{% include "includes/js_toggle_device.htm" %}
+<!-- begin: devices functions -->
+<!-- begin: toggle device script -->
+<script>
+async function toggleDevice(deviceId) {
+        const button = document.getElementById(deviceId);
+        const stateSpan = document.getElementById(`state-${deviceId}`);
+
+        try {
+            const response = await fetch(`{{ pfx }}/toggle/${deviceId}`, {method: 'POST'});
+            const data = await response.json();
+            if (response.ok) {
+                const newState = data.state;
+                button.style.setProperty('--status-color', newState === 'on' ? '#d35400' : (newState === 'off' ? '#448795' : 'gray'));
+                stateSpan.textContent = newState === 'on' ? 'ON' : (newState === 'off' ? 'OFF' : '???');
+            } else {
+                alert(data.error || "Error during toggling socket.");
+            }
+        } catch (error) {
+            console.error("Error during toggling device:", error);
+            alert("Connection error, please try again.");
+        }
+    }
+</script>
+<!-- end: toggle device script -->
 <script>
 async function update3Statuses() {
     try {
@@ -29,4 +51,4 @@ window.onload = update3Statuses;
 // refresh
 setInterval(update3Statuses, 5000);
 </script>
-<!-- end: functions for 3 devices -->
+<!-- end: devices functions -->
