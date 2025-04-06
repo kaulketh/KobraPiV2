@@ -34,7 +34,7 @@ INDEX = AttrDict({__K.pth: SLASH,
                   __K.id: "index",
                   __K.tmpt: f"index{__EXT}",
                   __K.nav: "start",
-                  __K.tit: "a dead cow and a kobra",
+                  __K.tit: "a dead cow and a kobra OR three W and a M",
                   __K.nfo: __EMPTY,
                   __K.hnt: __EMPTY
                   })

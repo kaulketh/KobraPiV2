@@ -2,7 +2,7 @@ import telepot
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .mySecrets import *
+from .mySecrets import *  # no public deployment ;-)
 
 # page auth
 USR = page_user
