@@ -8,8 +8,7 @@ import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-# This adds the parent directory (..) to sys.path
-# so that Python can find own modules.
+# add parent directory (..) to sys.path so that Python can find own modules
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import auth, devices, services
 
@@ -36,7 +35,7 @@ emoticon_worried = "\U0001F61F"
 def __service_info():
     info = "_Services_\n"
     for s in srvcs:
-        name = s.replace('_', " ")  # .replace('.service', '')
+        name = s.replace('_', " ")
         state = services.get_status(s)['status']
         # "active", "inactive", "failed", etc.
         if state == "active":
@@ -62,7 +61,6 @@ def __build_keyboard():
     status_text += "_Consumption_\n"
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
-        # sys.stdout.write(f"{data['name']} - {data['url']}: {pwr}\n")
         if pwr == "N/A":
             icon = icon_na
         elif pwr > 0:
@@ -76,7 +74,6 @@ def __build_keyboard():
             InlineKeyboardButton(text=f"{icon} {data['name']}",
                                  callback_data=f"tasmota:{key}"))
         time.sleep(.500)
-        # sys.stdout.write(f"get socket state: {key}\n")
     # Snapshot button only, when cams are powered!
     if cams_powered:
         mrkup = InlineKeyboardMarkup(
@@ -161,7 +158,6 @@ def on_message(msg):
     if admin(cid):
         sys.stdout.write(f"Message from {cid}: {text}\n")
         if text in {"start", "/start", "/status", "status", "/state", "state"}:
-            # pass
             state_update(cid)
         else:
             kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
@@ -199,7 +195,7 @@ def main():
     def handle_update(update):
         # if 'my_chat_member' in update:
         #     sys.stderr.write(f"Ignoring 'my_chat_member' update: {update}\n")
-        #     return  # Verhindert Absturz
+        #     return  # avoid chrash
         if 'message' in update:
             on_message(update['message'])
         elif 'callback_query' in update:
@@ -214,7 +210,7 @@ def main():
                     timeout=10,
                     allowed_updates=['message', 'callback_query'])
                 for update in updates:
-                    # Setzt den Offset hoch
+                    # increase offset
                     last_update_id = update["update_id"] + 1
                     handle_update(update)
             except KeyboardInterrupt:
@@ -227,8 +223,7 @@ def main():
                 exit()
             finally:
                 pass
-            time.sleep(1)  # Verhindert Überlastung der API
-
+            time.sleep(1)  # avoid API overload
     msg = "Bot is running..."
     kobra_bot.sendMessage(chat_id=chat_id, text=f"{BOT_NAME}\n{msg}")
     sys.stdout.write(f"{msg}\n")
