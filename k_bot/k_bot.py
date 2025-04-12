@@ -36,7 +36,7 @@ def __service_info():
     info = "_Services_\n"
     for s in srvcs:
         name = s.replace('_', " ")
-        state = services.get_status(s)['status']
+        state = services.get_info(s)['status']
         # "active", "inactive", "failed", etc.
         if state == "active":
             icon = icon_active
@@ -49,16 +49,33 @@ def __service_info():
     return info
 
 
-def __build_keyboard():
+def __srv_keyboard():
+    status_text = "_Systemd services_\n"
+    btns = []
+    for s in srvcs:
+        state = services.get_info(s)['status']
+        # "active", "inactive", "failed", etc.
+        if state == services.STR_ACTIVE:
+            icon = icon_active
+        elif state == services.STR_INACTIVE:
+            icon = icon_off
+        else:
+            icon = icon_failed
+        text = f"{icon} {s}"
+        btns.append(InlineKeyboardButton(text=f"{text}",
+                                         callback_data=f"service:{s}"))
+    mrkup = InlineKeyboardMarkup(inline_keyboard=[btns])
+    return status_text, mrkup
+
+
+def __pwr_keyboard():
     global cams_powered
     cams_powered = False
     tasmota_btns = []
     snapshot_btn = [
         InlineKeyboardButton(text="Print area", callback_data="snapshots")]
 
-    status_text = "*Server status and printer information*\n"
-    status_text += f"{__service_info()}\n"
-    status_text += "_Consumption_\n"
+    status_text = f"\n_Consumption_\n"
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
         if pwr == "N/A":
@@ -133,6 +150,21 @@ def _toggle_tasmota(cid, socket_key, delay=3):
         time.sleep(delay)
 
 
+def _toggle_service(cid, service, delay=3):
+    status = services.get_info(service)['status']
+    sys.stdout.write(f"{service} is {status}\n")
+    if admin(cid):
+        if status == services.STR_ACTIVE:
+            # stop service
+            services.stop(service)
+        if status == services.STR_INACTIVE:
+            # restart service
+            services.restart(service)
+    sys.stdout.write(
+        f"toggled {service} to {services.get_info(service)['status']}\n")
+    time.sleep(delay)
+
+
 def _get_pwr(url):
     pwr_url = f"{url}?cmnd=Status%208"
     rspns = requests.get(pwr_url).json()
@@ -145,10 +177,14 @@ def admin(ci):
 
 def state_update(cid):
     if admin(cid):
-        text, keyb = __build_keyboard()
-        kobra_bot.sendMessage(cid, text, reply_markup=keyb,
-                              parse_mode="Markdown")
-        sys.stdout.write(f"Update {text}\n")
+        headline = "*Server status and printer information*\n"
+        kobra_bot.sendMessage(cid, headline, parse_mode="Markdown")
+        pt, pm = __pwr_keyboard()
+        st, sm = __srv_keyboard()
+        kobra_bot.sendMessage(cid, st, reply_markup=sm, parse_mode="Markdown")
+        sys.stdout.write(f"Update {st}\n")
+        kobra_bot.sendMessage(cid, pt, reply_markup=pm, parse_mode="Markdown")
+        sys.stdout.write(f"Update {pt}\n")
 
 
 def on_message(msg):
@@ -157,7 +193,8 @@ def on_message(msg):
     text = msg.get("text", "")
     if admin(cid):
         sys.stdout.write(f"Message from {cid}: {text}\n")
-        if text in {"start", "/start", "/status", "status", "/state", "state"}:
+        if text in {"start", "/start", "/status", "status", "/state",
+                    "state"}:
             state_update(cid)
         else:
             kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
@@ -179,6 +216,13 @@ def on_callback_query(msg):
                 query_id, text=f"Toggled {socket_key.title()}.")
             _toggle_tasmota(cid, socket_key)
             sys.stdout.write(f"toggle socket {socket_key}\n")
+        if data.startswith("service:"):
+            service = data.split(":")[1]
+            kobra_bot.answerCallbackQuery(
+                query_id, text=f"Toggled {service}")
+            _toggle_service(cid, service)
+            sys.stdout.write(f"toggle service {service}\n")
+
         elif data == "snapshots":
             global cams_powered
             if cams_powered:
@@ -224,6 +268,7 @@ def main():
             finally:
                 pass
             time.sleep(1)  # avoid API overload
+
     msg = "Bot is running..."
     kobra_bot.sendMessage(chat_id=chat_id, text=f"{BOT_NAME}\n{msg}")
     sys.stdout.write(f"{msg}\n")
