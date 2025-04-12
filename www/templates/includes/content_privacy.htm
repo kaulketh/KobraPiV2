@@ -1,58 +1,10 @@
-<style>
-    .tabs {
-        display: flex;
-        margin-bottom: 1em;
-        border-bottom: 2px solid #ccc;
-    }
-
-    .tab-button, .lang-button {
-        padding: 0.5em 1em;
-        cursor: pointer;
-        border: none;
-        background: none;
-        font-weight: bold;
-        border-bottom: 3px solid transparent;
-        transition: border-color 0.3s;
-    }
-
-    .tab-button.active {
-        border-bottom: 3px solid #007BFF;
-        color: #007BFF;
-    }
-
-    .lang-button {
-        margin-left: auto;
-    {#border: 1px solid #ccc;#}{#border-radius: 5px;#} font-size: 0.9em;
-    }
-
-    .tab-content {
-        display: none;
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    .lang-de, .lang-en {
-        display: none;
-    }
-
-    .lang-de.active,
-    .lang-en.active {
-        display: block;
-    }
-
-    .tab-content a {
-        color: #007BFF;
-    }
-</style>
-
+{% include "includes/style_privacy.htm"%}
 <div class="tabs">
-    <button class="tab-button active" onclick="showTab('impressum')">Impressum
-        / Legal Notice
+    <button class="tab-button active" onclick="showTab('impressum')">impressum
+        / legal notice
     </button>
-    <button class="tab-button" onclick="showTab('datenschutz')">Datenschutz /
-        Privacy Policy
+    <button class="tab-button" onclick="showTab('datenschutz')">datenschutz /
+        privacy policy
     </button>
     <button class="lang-button" onclick="toggleLanguage()"><img
             src="{{ url_for('static', filename='images/de_en.jpg') }}" alt="EN"
@@ -67,7 +19,7 @@
             {% include 'includes/content_address.htm' %}
         </p>
         <p><strong>Hinweis:</strong><br>
-            Dies ist eine rein private Website ohne kommerziellen Hintergrund.
+            Dies ist eine rein private Webseite ohne kommerziellen Hintergrund.
             Sie dient ausschließlich der Darstellung privater Projekte und
             Hobbys.
         </p>
@@ -150,17 +102,4 @@
         </p>
     </div>
 </div>
-
-<script>
-    function showTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-
-        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-        document.querySelector('.tab-button[onclick="showTab(\'' + tabId + '\')"]').classList.add('active');
-    }
-
-    function toggleLanguage() {
-        document.querySelectorAll('.lang-de, .lang-en').forEach(el => el.classList.toggle('active'));
-    }
-</script>
+{% include "includes/js_privacy.htm" %}
