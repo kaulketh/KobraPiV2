@@ -15,7 +15,7 @@ from auth import AUTH, CHAT_ID, KOBRA_BOT
 from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
 from gunicorn_config import workers
-from services import ACTIONS, SYSTEMD, get_status
+from services import ACTIONS, SYSTEMD, get_info
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO
 
@@ -171,7 +171,7 @@ def privacy():
 
 @kobra_bp.route(SRVCS.path, methods=['GET'])
 def services():
-    statuses = {service: get_status(service) for service in SYSTEMD}
+    statuses = {service: get_info(service) for service in SYSTEMD}
     return render_template(
         SRVCS.template,
         active_page=SRVCS.id,
