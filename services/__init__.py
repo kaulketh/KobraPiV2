@@ -7,6 +7,8 @@ import auth
 #               this             pwr                bot              fan
 SYSTEMD = [auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]]
 ACTIONS = ["stop", "start", "restart"]
+STR_ACTIVE = "active"
+STR_INACTIVE = "inactive"
 
 
 def __sudo_control(action, service):
@@ -25,7 +27,7 @@ def restart(service: str):
     __sudo_control(ACTIONS[2], service)
 
 
-def get_status(service):
+def get_info(service):
     state = subprocess.run(['systemctl', 'is-active', service],
                            capture_output=True, text=True).stdout.strip()
     enabled = subprocess.run(['systemctl', 'is-enabled', service],

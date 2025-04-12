@@ -7,102 +7,108 @@ class AttrDict(dict):
     the dictionary. Keys must be of type string.
     """
     __slots__ = ()
-    __getattr__ = dict.__getitem__
-    __setattr__ = dict.__setitem__
+    __getattr__ = dict.__getitleem__
+    __setattr__ = dict.__setitleem__
 
 
 ROOT = "kobra"
-WIP = "[ work in progress ]"
-UNDER_CONSTR = "[ under construction ]"
-SLASH = "/"
 REPO = "https://github.com/kaulketh/KobraPiV2"
+EXTENSION = ".html"
 
-__EXT = ".html"
-__EMPTY = ""
-__K = AttrDict({"pth": "path",
+STR_EMPTY = ""
+STR_SLASH = "/"
+STR_UNDER_CONSTR = "[ under construction ]"
+STR_WIP = "[ work in progress ]"
+
+KEY = AttrDict({"path": "path",
                 "id": "id",
-                "tmpt": "template",
-                "nav": "navi",
-                "tit": "title",
+                "template": "template",
+                "navi": "navi",
+                "title": "title",
                 "nfo": "info",
-                "hnt": "hint",
+                "hint": "hint",
                 "name": "name",
                 "ep": "endpoint"
                 })
 
-INDEX = AttrDict({__K.pth: SLASH,
-                  __K.id: "index",
-                  __K.tmpt: f"index{__EXT}",
-                  __K.nav: "start",
-                  __K.tit: "a dead cow and a kobra or three W and a M",
-                  __K.nfo: __EMPTY,
-                  __K.hnt: __EMPTY
+INDEX = AttrDict({KEY.path: STR_SLASH,
+                  KEY.id: "index",
+                  KEY.template: f"index{EXTENSION}",
+                  KEY.navi: "start",
+                  KEY.title: "a dead cow and a kobra or three W and a M",
+                  KEY.nfo: STR_EMPTY,
+                  KEY.hint: STR_EMPTY
                   })
 
-CAMS = AttrDict({__K.pth: f"{SLASH}cams",
-                 __K.id: "cams",
-                 __K.tmpt: f"cams{__EXT}",
-                 __K.nav: "live",
-                 __K.tit: "live streams",
-                 __K.nfo: "Turned off!",
-                 __K.hnt: "Please make sure that these streams "
-                          "have only been accessed ONCE!"
+CAMS = AttrDict({KEY.path: f"{STR_SLASH}cams",
+                 KEY.id: "cams",
+                 KEY.template: f"cams{EXTENSION}",
+                 KEY.navi: "live",
+                 KEY.title: "live streams",
+                 KEY.nfo: "Turned off!",
+                 KEY.hint: "Please make sure that these streams "
+                           "have only been accessed ONCE!"
                  })
 
-PRIVAT = AttrDict({__K.pth: f"{SLASH}privacy",
-                   __K.id: "privacy",
-                   __K.tmpt: f"privacy{__EXT}",
-                   __K.nav: __EMPTY,  # "imprint",
-                   __K.tit: __EMPTY,  # "legal notice & privacy policy",
-                   __K.nfo: __EMPTY,
-                   __K.hnt: __EMPTY
+PRIVAT = AttrDict({KEY.path: f"{STR_SLASH}privacy",
+                   KEY.id: "privacy",
+                   KEY.template: f"privacy{EXTENSION}",
+                   KEY.navi: STR_EMPTY,  # "imprint",
+                   KEY.title: STR_EMPTY,  # "legal notice & privacy policy",
+                   KEY.nfo: STR_EMPTY,
+                   KEY.hint: STR_EMPTY
                    })
 
-POWER = AttrDict({__K.pth: f"{SLASH}power",
-                  __K.id: "power",
-                  __K.tmpt: f"power{__EXT}",
-                  __K.nav: "power",
-                  __K.tit: "power status",
-                  __K.nfo: __EMPTY,
-                  __K.hnt: __EMPTY
+POWER = AttrDict({KEY.path: f"{STR_SLASH}power",
+                  KEY.id: "power",
+                  KEY.template: f"power{EXTENSION}",
+                  KEY.navi: "power",
+                  KEY.title: "power status",
+                  KEY.nfo: STR_EMPTY,
+                  KEY.hint: STR_EMPTY
                   })
 
-SRVCS = AttrDict({__K.pth: f"{SLASH}services",
-                  __K.tmpt: f"services{__EXT}",
-                  __K.nav: "services",
-                  __K.id: "services",
-                  __K.tit: "systemd services",
-                  __K.nfo: __EMPTY,
-                  __K.hnt: __EMPTY
+SRVCS = AttrDict({KEY.path: f"{STR_SLASH}services",
+                  KEY.template: f"services{EXTENSION}",
+                  KEY.navi: "services",
+                  KEY.id: "services",
+                  KEY.title: "systemd services",
+                  KEY.nfo: STR_EMPTY,
+                  KEY.hint: STR_EMPTY
                   })
 
-ABOUT = AttrDict({__K.pth: f"{SLASH}about",
-                  __K.tmpt: f"about{__EXT}",
-                  __K.nav: "info",
-                  __K.id: "about",
-                  __K.tit: "information",
-                  __K.nfo: __EMPTY,
-                  __K.hnt: __EMPTY
+ABOUT = AttrDict({KEY.path: f"{STR_SLASH}about",
+                  KEY.template: f"about{EXTENSION}",
+                  KEY.navi: "info",
+                  KEY.id: "about",
+                  KEY.title: "information",
+                  KEY.nfo: STR_EMPTY,
+                  KEY.hint: STR_EMPTY
                   })
 
-MADE = AttrDict({__K.pth: f"{SLASH}made",
-                 __K.tmpt: f"made{__EXT}",
-                 __K.nav: "made",
-                 __K.id: "made",
-                 __K.tit: "made in and for 3D",
-                 __K.nfo: WIP,
-                 __K.hnt: __EMPTY
+MADE = AttrDict({KEY.path: f"{STR_SLASH}made",
+                 KEY.template: f"made{EXTENSION}",
+                 KEY.navi: "made",
+                 KEY.id: "made",
+                 KEY.title: "made in and for 3D",
+                 KEY.nfo: "some impressions",
+                 KEY.hint: STR_WIP
                  })
 
-STATUS = AttrDict({__K.pth: f"{SLASH}status"})
+STATUS = AttrDict({KEY.path: f"{STR_SLASH}status"})
 
 # navigation elements order
 NAVI = [
-    {__K.name: INDEX.navi, __K.ep: f"{ROOT}.{INDEX.id}", __K.id: INDEX.id},
-    {__K.name: POWER.navi, __K.ep: f"{ROOT}.{POWER.id}", __K.id: POWER.id},
-    {__K.name: CAMS.navi, __K.ep: f"{ROOT}.{CAMS.id}", __K.id: CAMS.id},
-    {__K.name: SRVCS.navi, __K.ep: f"{ROOT}.{SRVCS.id}", __K.id: SRVCS.id},
-    {__K.name: ABOUT.navi, __K.ep: f"{ROOT}.{ABOUT.id}", __K.id: ABOUT.id},
-    {__K.name: MADE.navi, __K.ep: f"{ROOT}.{MADE.id}", __K.id: MADE.id},
-    {__K.name: PRIVAT.navi, __K.ep: f"{ROOT}.{PRIVAT.id}", __K.id: PRIVAT.id}
+    {KEY.name: INDEX.navi, KEY.ep: f"{ROOT}.{INDEX.id}",
+     KEY.id: INDEX.id},
+    {KEY.name: POWER.navi, KEY.ep: f"{ROOT}.{POWER.id}",
+     KEY.id: POWER.id},
+    {KEY.name: CAMS.navi, KEY.ep: f"{ROOT}.{CAMS.id}", KEY.id: CAMS.id},
+    {KEY.name: SRVCS.navi, KEY.ep: f"{ROOT}.{SRVCS.id}",
+     KEY.id: SRVCS.id},
+    {KEY.name: ABOUT.navi, KEY.ep: f"{ROOT}.{ABOUT.id}",
+     KEY.id: ABOUT.id},
+    {KEY.name: MADE.navi, KEY.ep: f"{ROOT}.{MADE.id}", KEY.id: MADE.id},
+    {KEY.name: PRIVAT.navi, KEY.ep: f"{ROOT}.{PRIVAT.id}",
+     KEY.id: PRIVAT.id}
 ]
