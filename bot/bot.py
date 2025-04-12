@@ -8,9 +8,11 @@ import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-# add parent directory (..) to sys.path so that Python can find own modules
+# add parent directory (..) to sys.path to avoid possible import problems
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import auth, devices, services
+import auth
+import devices
+import services
 
 kobra_bot = auth.KOBRA_BOT
 chat_id = auth.CHAT_ID
@@ -32,26 +34,10 @@ emoticon_rolling_eyes = "\U0001F644"
 emoticon_worried = "\U0001F61F"
 
 
-def __service_info():
-    info = "_Services_\n"
-    for s in srvcs:
-        name = s.replace('_', " ")
-        state = services.get_info(s)['status']
-        # "active", "inactive", "failed", etc.
-        if state == "active":
-            icon = icon_active
-        elif state == "inactive":
-            icon = icon_off
-        else:
-            icon = icon_failed
-        # info += f"{name}{icon}  "
-        info += f"{icon} {name}\n"
-    return info
-
-
-def __srv_keyboard():
+def __service_keyboard():
     status_text = "_Systemd services_\n"
     btns = []
+    log = ""
     for s in srvcs:
         state = services.get_info(s)['status']
         # "active", "inactive", "failed", etc.
@@ -62,20 +48,23 @@ def __srv_keyboard():
         else:
             icon = icon_failed
         text = f"{icon} {s}"
+        log += f"{s}={state}\n"
         btns.append(InlineKeyboardButton(text=f"{text}",
                                          callback_data=f"service:{s}"))
     mrkup = InlineKeyboardMarkup(inline_keyboard=[btns])
+    sys.stdout.write(log)
     return status_text, mrkup
 
 
-def __pwr_keyboard():
+def __power_keyboard():
     global cams_powered
     cams_powered = False
     tasmota_btns = []
     snapshot_btn = [
         InlineKeyboardButton(text="Print area", callback_data="snapshots")]
 
-    status_text = f"\n_Consumption_\n"
+    status_text = f"_Consumption_\n"
+    log = ""
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
         if pwr == "N/A":
@@ -87,6 +76,7 @@ def __pwr_keyboard():
         if data['name'] == "Video":
             cams_powered = pwr > 0
         status_text += f"{data['name']} {pwr}W | "
+        log += f"{data['name']} {pwr}W\n"
         tasmota_btns.append(
             InlineKeyboardButton(text=f"{icon} {data['name']}",
                                  callback_data=f"tasmota:{key}"))
@@ -97,6 +87,7 @@ def __pwr_keyboard():
             inline_keyboard=[tasmota_btns, snapshot_btn])
     else:
         mrkup = InlineKeyboardMarkup(inline_keyboard=[tasmota_btns])
+    sys.stdout.write(log)
     return status_text, mrkup
 
 
@@ -155,13 +146,12 @@ def _toggle_service(cid, service, delay=3):
     sys.stdout.write(f"{service} is {status}\n")
     if admin(cid):
         if status == services.STR_ACTIVE:
-            # stop service
             services.stop(service)
         if status == services.STR_INACTIVE:
-            # restart service
             services.restart(service)
     sys.stdout.write(
-        f"toggled {service} to {services.get_info(service)['status']}\n")
+        f"change state of {service} to "
+        f"{services.get_info(service)['status']}\n")
     time.sleep(delay)
 
 
@@ -179,22 +169,19 @@ def state_update(cid):
     if admin(cid):
         headline = "*Gathering server status and printer information...*\n"
         kobra_bot.sendMessage(cid, headline, parse_mode="Markdown")
-        pt, pm = __pwr_keyboard()
-        st, sm = __srv_keyboard()
+        pt, pm = __power_keyboard()
+        st, sm = __service_keyboard()
         kobra_bot.sendMessage(cid, st, reply_markup=sm, parse_mode="Markdown")
-        sys.stdout.write(f"Update {st}\n")
         kobra_bot.sendMessage(cid, pt, reply_markup=pm, parse_mode="Markdown")
-        sys.stdout.write(f"Update {pt}\n")
 
 
 def on_message(msg):
     """Responds to incoming messages"""
     cid = msg["chat"]["id"]
-    text = msg.get("text", "")
+    text = msg.get("text", "").lower()
     if admin(cid):
         sys.stdout.write(f"Message from {cid}: {text}\n")
-        if text in {"start", "/start", "/status", "status", "/state",
-                    "state"}:
+        if text in {"start", "/start", "/status", "status", "/state", "state"}:
             state_update(cid)
         else:
             kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
@@ -213,16 +200,15 @@ def on_callback_query(msg):
         if data.startswith("tasmota:"):
             socket_key = data.split(":")[1]
             kobra_bot.answerCallbackQuery(
-                query_id, text=f"Toggled {socket_key.title()}.")
+                query_id, text=f"Toggle {socket_key.title()}.")
             _toggle_tasmota(cid, socket_key)
             sys.stdout.write(f"toggle socket {socket_key}\n")
         if data.startswith("service:"):
             service = data.split(":")[1]
             kobra_bot.answerCallbackQuery(
-                query_id, text=f"Toggled {service}")
+                query_id, text=f"Toggle {service}")
             _toggle_service(cid, service)
             sys.stdout.write(f"toggle service {service}\n")
-
         elif data == "snapshots":
             global cams_powered
             if cams_powered:
@@ -237,9 +223,9 @@ def on_callback_query(msg):
 
 def main():
     def handle_update(update):
-        # if 'my_chat_member' in update:
-        #     sys.stderr.write(f"Ignoring 'my_chat_member' update: {update}\n")
-        #     return  # avoid crash
+        if 'my_chat_member' in update:
+            sys.stderr.write(f"Ignoring 'my_chat_member' update: {update}\n")
+            return  # avoid crash
         if 'message' in update:
             on_message(update['message'])
         elif 'callback_query' in update:
@@ -270,8 +256,9 @@ def main():
             time.sleep(1)  # avoid API overload
 
     msg = "Bot is running..."
-    kobra_bot.sendMessage(chat_id=chat_id, text=f"{BOT_NAME}\n{msg}")
-    sys.stdout.write(f"{msg}\n")
+    text = f"{BOT_NAME}\n{msg}"
+    kobra_bot.sendMessage(chat_id=chat_id, text=text)
+    sys.stdout.write(f"{text}\n")
     state_update(chat_id)
     # main loop
     poll_updates()
