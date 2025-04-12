@@ -1,6 +1,6 @@
 <script>
     function showTab(tabId) {
-        document.querySelectorAll('.tab-contents').forEach(div => div.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
 
         document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
