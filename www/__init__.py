@@ -7,8 +7,8 @@ class AttrDict(dict):
     the dictionary. Keys must be of type string.
     """
     __slots__ = ()
-    __getattr__ = dict.__getitleem__
-    __setattr__ = dict.__setitleem__
+    __getattr__ = dict.__getitem__
+    __setattr__ = dict.__setitem__
 
 
 ROOT = "kobra"
