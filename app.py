@@ -17,12 +17,12 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_status
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, SLASH, PRIVAT, REPO
+    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO
 
 VERSION = "v2"
 
 # Flask configuration
-APPLICATION_ROOT = f"{SLASH}{ROOT}"
+APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
 app = Flask("Kobra2+Control",
             static_url_path=APPLICATION_ROOT,
             static_folder='www/static',
@@ -190,7 +190,7 @@ def control(action, service):
         return redirect(url_for(url))
 
 
-@kobra_bp.route(f"{SLASH}toggle/<device_id>", methods=["POST"])
+@kobra_bp.route(f"{STR_SLASH}toggle/<device_id>", methods=["POST"])
 @AUTH.login_required
 def toggle(device_id):
     if device_id not in TASMOTA_SOCKETS:
