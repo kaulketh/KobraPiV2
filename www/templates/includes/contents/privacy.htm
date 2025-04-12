@@ -1,4 +1,4 @@
-{% include "includes/style_privacy.htm"%}
+{% include "includes/privacy_style.htm" %}
 <div class="tabs">
     <button class="tab-button active" onclick="showTab('impressum')">impressum
         / legal notice
@@ -16,7 +16,7 @@
     <div class="lang-de active">
         <h2>Impressum</h2>
         <p><strong>Angaben gemäß § 5 TMG:</strong><br>
-            {% include 'includes/content_address.htm' %}
+            {% include 'includes/contents/address.htm' %}
         </p>
         <p><strong>Hinweis:</strong><br>
             Dies ist eine rein private Webseite ohne kommerziellen Hintergrund.
@@ -27,7 +27,7 @@
     <div class="lang-en">
         <h2>Legal Notice</h2>
         <p><strong>Information according to § 5 TMG:</strong><br>
-            {% include 'includes/content_address.htm' %}
+            {% include 'includes/contents/address.htm' %}
         </p>
         <p><strong>Note:</strong><br>
             This is a purely private, non-commercial website. It is intended
@@ -46,7 +46,7 @@
             erfasst oder gespeichert.
         </p>
         <p><strong>2. Verantwortlicher</strong><br>
-            {% include 'includes/content_address.htm' %}
+            {% include 'includes/contents/address.htm' %}
         </p>
         <p><strong>3. Erhebung und Speicherung personenbezogener Daten</strong><br>
             Diese Webseite verwendet keine Analyse-Tools, keine Cookies, kein
@@ -62,7 +62,7 @@
         </p>
         <p><strong>5. Verlinkungen auf externe Seiten</strong><br>
             Diese Webseite enthält Links zu:<br>
-            {% include 'includes/content_links.htm' %}
+            {% include 'includes/contents/links.htm' %}
         </p>
 
         <p><strong>6. Rechte der Nutzer</strong><br>
@@ -78,7 +78,7 @@
             data is collected or stored.
         </p>
         <p><strong>2. Responsible Person</strong><br>
-            {% include 'includes/content_address.htm' %}
+            {% include 'includes/contents/address.htm' %}
         </p>
         <p><strong>3. Data Collection</strong><br>
             This site uses no analytics tools, cookies, contact forms, or user
@@ -94,7 +94,7 @@
         </p>
         <p><strong>5. External Links</strong><br>
             This site links to:<br>
-            {% include 'includes/content_links.htm' %}
+            {% include 'includes/contents/links.htm' %}
         </p>
         <p><strong>6. User Rights</strong><br>
             Since no personal data is collected, there are no applicable rights
@@ -102,4 +102,4 @@
         </p>
     </div>
 </div>
-{% include "includes/js_privacy.htm" %}
+{% include "includes/privacy_js.htm" %}
