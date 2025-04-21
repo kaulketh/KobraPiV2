@@ -250,6 +250,24 @@ def status():
     )
 
 
+@kobra_bp.route('/debug')
+def debug():
+    from datetime import datetime
+    import platform
+    import os
+
+    return render_template("debug.html",
+                           title="🐍 KobraPi – Debug Zone ",
+                           version="v1.0.0",
+                           # Optional: Dynamisch aus Git holen
+                           timestamp=datetime.now().strftime(
+                               "%Y-%m-%d %H:%M:%S"),
+                           osinfo=platform.platform(),
+                           python_version=platform.python_version(),
+                           hostname=os.uname().nodename
+                           )
+
+
 # Register kobra blueprint and filter for run
 app.register_blueprint(kobra_bp)
 app.jinja_env.filters['gallery_image'] = gallery_image
