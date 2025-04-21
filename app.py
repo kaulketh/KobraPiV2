@@ -103,7 +103,6 @@ def __get_version():
         version_info += response.json()["tag_name"]
     else:
         version_info += u_str
-
     return f"{version_info}-{commit_hash()}"
 
 
