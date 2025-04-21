@@ -17,9 +17,8 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_info
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO
-
-VERSION = "V2"
+    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_RELEASE, \
+    REPO_COMMIT
 
 # Flask configuration
 APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
@@ -83,12 +82,37 @@ for filename in gallery:
 
 # end setup gallery
 
+
+def __get_version():
+    version_info = ""
+    u_str = "unknown"
+
+    def commit_hash():
+        c_hash = ""
+        c_url = REPO_COMMIT
+        c_response = requests.get(c_url)
+        if c_response.status_code == 200:
+            c_hash += c_response.json()["sha"][:7]  # 7 digits only
+        else:
+            c_hash += u_str
+        return c_hash
+
+    url = REPO_RELEASE
+    response = requests.get(url)
+    if response.status_code == 200:
+        version_info += response.json()["tag_name"]
+    else:
+        version_info += u_str
+
+    return f"{version_info}-{commit_hash()}"
+
+
 # Server routes
 # make available in all routes
 @kobra_bp.app_context_processor
 def inject_context():
     return dict(
-        version=VERSION,
+        version=__get_version(),
         navigation=NAVI,
         status_path=STATUS.path,
         pfx=APPLICATION_ROOT,
@@ -257,9 +281,6 @@ def debug():
     import os
 
     return render_template("debug.html",
-                           title="", #🐍 KobraPi – Debug Zone ",
-                           # version="v2.0.0",
-                           # option: dynamically from Git
                            timestamp=datetime.now().strftime(
                                "%Y-%m-%d %H:%M:%S"),
                            osinfo=platform.platform(),

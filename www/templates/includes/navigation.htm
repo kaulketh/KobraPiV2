@@ -14,7 +14,7 @@
                 data-bs-placement="bottom"
                 data-bs-delay='{"show":500,"hide":100}'
                 data-bs-custom-class="custom-tooltip"
-                title="GitHub code repository">
+                title="code repository">
                 &ensp;<b>KobraPi</b><small>&nbsp;{{ version }}</small></a>
         </div>
         <!-- responsive burger menu -->
@@ -28,7 +28,14 @@
             <ul class="navbar-nav">
                 {% for item in navigation %}
                     <li class="nav-item {% if active_page == item.id %}active{% endif %}">
-                        <a class="nav-link" href="{{ url_for(item.endpoint) }}">{{ item.name }}</a>
+                        <a class="nav-link"
+                            href="{{ url_for(item.endpoint) }}"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            data-bs-delay='{"show":500,"hide":100}'
+                            data-bs-custom-class="custom-tooltip"
+                            title="{{ item.title }}">{{ item.name }}</a>
+
                     </li>
                 {% endfor %}
             </ul>
