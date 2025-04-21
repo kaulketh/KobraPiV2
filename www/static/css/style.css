@@ -299,3 +299,14 @@ button {
     font-size: 0.85rem;
     border-radius: 0.25rem;
   }
+
+pre {
+    font-family: 'Courier New', Courier, monospace; /* Monospace-Schriftart */
+    font-size: 14px;  /* Festlegen der Schriftgröße, um ein einheitliches Aussehen zu gewährleisten */
+    white-space: pre; /* Sicherstellen, dass Leerzeichen und Zeilenumbrüche erhalten bleiben */
+    margin: 0; /* Entfernt unnötige Ränder */
+    padding: 10px; /* Etwas Abstand rund um den Text für bessere Lesbarkeit */
+    background-color: #222; /* Dunkelgrauer Hintergrund, um es mehr wie ein Terminal aussehen zu lassen */
+    color: #20c997; /* Textfarbe für den ASCII-Text */
+    line-height: 1.4; /* Zeilenhöhe anpassen für bessere Lesbarkeit */
+  }

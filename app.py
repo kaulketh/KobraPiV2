@@ -257,7 +257,7 @@ def debug():
     import os
 
     return render_template("debug.html",
-                           title="🐍 KobraPi – Debug Zone ",
+                           title="", #🐍 KobraPi – Debug Zone ",
                            # version="v2.0.0",
                            # option: dynamically from Git
                            timestamp=datetime.now().strftime(
