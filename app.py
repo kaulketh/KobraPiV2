@@ -31,16 +31,6 @@ CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
 
-
-def __get_release_tag(repo=REPO_LTSTRL):
-    url = repo
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()["tag_name"]
-    else:
-        return "unknown"
-
-
 # setup gallery
 global img_orientation
 GALLERY = os.path.join(app.static_folder, 'gallery')
