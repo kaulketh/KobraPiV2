@@ -7,7 +7,15 @@
                 <img src="{{ url_for('static', filename='favico/kobrapi20.png') }}"
                      alt="Logo" height="32" class="me-2">
             </div>
-            <a class="navbar-brand text-secondary" href="{{ repo }}" target="_blank">&ensp;<b>KobraPi</b><small>&nbsp;{{ version }}</small></a>
+            <a class="navbar-brand text-secondary"
+                href="{{ repo }}"
+                target="_blank"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                data-bs-delay='{"show":500,"hide":100}'
+                data-bs-custom-class="custom-tooltip"
+                title="GitHub code repository">
+                &ensp;<b>KobraPi</b><small>&nbsp;{{ version }}</small></a>
         </div>
         <!-- responsive burger menu -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -28,6 +36,7 @@
     </div>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
 <!-- START MAIN CONTENT (important to leave space for the fixed navi bar and footer) -->
 <div class="page_content">
 <!-- end: navigation bar -->

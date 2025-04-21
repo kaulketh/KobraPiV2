@@ -1,0 +1,47 @@
+<div class="container mt-5">
+    <div class="card bg-dark text-light shadow-lg rounded-4 border border-success">
+        <div class="card-header border-success">
+            <h3 class="mb-0">🐍 Welcome to the <span class="text-success">KobraPi Debug Zone</span>
+            </h3>
+            <small class="text-muted">This area is highly venomous. Proceed
+                with curiosity.</small>
+        </div>
+        <div class="card-body">
+<pre class="text-success">
+    .--.       .--.
+     /    \.---./    \\
+    |  .-.  Y  .-.  |
+         |  |_|  |  |_|  |   🐍
+   \     (_)     /
+   \         /
+    `-------`
+</pre>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-dark text-light">🕒 <strong>Server
+                    Time:</strong> {{ timestamp }}</li>
+                <li class="list-group-item bg-dark text-light">💾 <strong>OS
+                    Info:</strong> {{ osinfo }}</li>
+                <li class="list-group-item bg-dark text-light">🐍 <strong>Python:</strong> {{ python_version }}
+                </li>
+                <li class="list-group-item bg-dark text-light">💡 <strong>Hostname:</strong> {{ hostname }}
+                </li>
+                <li class="list-group-item bg-dark text-light">🚀 <strong>KobraPi
+                    Version:</strong> {{ version }}</li>
+            </ul>
+
+            <div class="mt-4">
+                <p class="text-warning">Want to do more? Try the console…
+                    <code>window.kobraPi()</code></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function secretMessage() {
+        alert("🐍 You found the venom. Stay curious!");
+        console.log("%cYou're inside the snake pit 🐍", "color: lime; font-size: 16px");
+    }
+
+    window.kobraPi = secretMessage;
+</script>

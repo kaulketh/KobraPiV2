@@ -19,7 +19,7 @@ from services import ACTIONS, SYSTEMD, get_info
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO
 
-VERSION = "v2"
+VERSION = "V2"
 
 # Flask configuration
 APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
@@ -248,6 +248,24 @@ def status():
          }
          }
     )
+
+
+@kobra_bp.route('/debug')
+def debug():
+    from datetime import datetime
+    import platform
+    import os
+
+    return render_template("debug.html",
+                           title="", #🐍 KobraPi – Debug Zone ",
+                           # version="v2.0.0",
+                           # option: dynamically from Git
+                           timestamp=datetime.now().strftime(
+                               "%Y-%m-%d %H:%M:%S"),
+                           osinfo=platform.platform(),
+                           python_version=platform.python_version(),
+                           hostname=os.uname().nodename
+                           )
 
 
 # Register kobra blueprint and filter for run

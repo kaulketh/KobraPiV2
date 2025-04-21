@@ -167,7 +167,7 @@ def admin(ci):
 
 def state_update(cid):
     if admin(cid):
-        headline = "*Gathering server status and printer information...*\n"
+        headline = "*Gathering status information...*\n"
         kobra_bot.sendMessage(cid, headline, parse_mode="Markdown")
         pt, pm = __power_keyboard()
         st, sm = __service_keyboard()
