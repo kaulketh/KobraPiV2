@@ -103,15 +103,17 @@ STATUS = AttrDict({KEY.path: f"{STR_SLASH}status"})
 # navigation elements order
 NAVI = [
     {KEY.name: INDEX.navi, KEY.ep: f"{ROOT}.{INDEX.id}",
-     KEY.id: INDEX.id},
+     KEY.id: INDEX.id, KEY.title: f"{INDEX.title[:17]}..."},
     {KEY.name: POWER.navi, KEY.ep: f"{ROOT}.{POWER.id}",
-     KEY.id: POWER.id},
-    {KEY.name: CAMS.navi, KEY.ep: f"{ROOT}.{CAMS.id}", KEY.id: CAMS.id},
+     KEY.id: POWER.id, KEY.title: f"{POWER.title[:17]}..."},
+    {KEY.name: CAMS.navi, KEY.ep: f"{ROOT}.{CAMS.id}",
+     KEY.id: CAMS.id, KEY.title: f"{CAMS.title[:17]}..."},
     {KEY.name: SRVCS.navi, KEY.ep: f"{ROOT}.{SRVCS.id}",
-     KEY.id: SRVCS.id},
+     KEY.id: SRVCS.id, KEY.title: f"{SRVCS.title[:17]}..."},
     {KEY.name: ABOUT.navi, KEY.ep: f"{ROOT}.{ABOUT.id}",
-     KEY.id: ABOUT.id},
-    {KEY.name: MADE.navi, KEY.ep: f"{ROOT}.{MADE.id}", KEY.id: MADE.id},
-    {KEY.name: PRIVAT.navi, KEY.ep: f"{ROOT}.{PRIVAT.id}",
-     KEY.id: PRIVAT.id}
+     KEY.id: ABOUT.id, KEY.title: f"{ABOUT.title[:17]}..."},
+    {KEY.name: MADE.navi, KEY.ep: f"{ROOT}.{MADE.id}",
+     KEY.id: MADE.id, KEY.title: f"{MADE.title[:17]}..."}  # ,s
+    # {KEY.name: PRIVAT.navi, KEY.ep: f"{ROOT}.{PRIVAT.id}",
+    # KEY.id: PRIVAT.id, KEY.title: PRIVAT.title},
 ]
