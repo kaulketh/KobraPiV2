@@ -287,3 +287,15 @@ button {
 .gallery img:hover {
     transform: scale(1.05);
 }
+
+.custom-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: #343a40; /* dark background */
+  }
+
+  .custom-tooltip .tooltip-inner {
+    background-color: #343a40;  /* dunkelgrau */
+    color: #fff;                /* weiße Schrift */
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 0.25rem;
+  }
