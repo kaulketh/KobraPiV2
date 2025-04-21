@@ -17,7 +17,8 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_info
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_LTSTRL
+    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_RELEASE, \
+    REPO_COMMIT
 
 # Flask configuration
 APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
@@ -82,13 +83,28 @@ for filename in gallery:
 # end setup gallery
 
 
-def __get_release_tag(repo=REPO_LTSTRL):
-    url = repo
+def __get_version():
+    version_info = ""
+    u_str = "unknown"
+
+    def commit_hash():
+        c_hash = ""
+        c_url = REPO_COMMIT
+        c_response = requests.get(c_url)
+        if c_response.status_code == 200:
+            c_hash += c_response.json()["sha"][:7]  # 7 digits only
+        else:
+            c_hash += u_str
+        return c_hash
+
+    url = REPO_RELEASE
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json()["tag_name"]
+        version_info += response.json()["tag_name"]
     else:
-        return "unknown"
+        version_info += u_str
+
+    return f"{version_info}-{commit_hash()}"
 
 
 # Server routes
@@ -96,7 +112,7 @@ def __get_release_tag(repo=REPO_LTSTRL):
 @kobra_bp.app_context_processor
 def inject_context():
     return dict(
-        version=__get_release_tag(),
+        version=__get_version(),
         navigation=NAVI,
         status_path=STATUS.path,
         pfx=APPLICATION_ROOT,
