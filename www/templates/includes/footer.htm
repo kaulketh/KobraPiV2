@@ -3,15 +3,22 @@
 </div>
 <nav class="navbar navbar-expand-sm navbar-dark navbar-footer d-flex justify-content-end px-3">
     <div class="d-flex align-items-center">
-        <a class="navbar-brand text-secondary" style="font-size: small" href={{ url_for('kobra.privacy') }}>D3adCow1220</a>
+        <a class="navbar-brand text-secondary"
+           style="font-size: small"
+           href="{{ url_for('kobra.privacy') }}"
+           data-bs-toggle="tooltip"
+           data-bs-placement="bottom"
+           title="Impressum / Privacy">
+           D3adCow1220</a>
         <div class="p-1 border border-3 border-secondary shadow-lg rounded">
             <img src="{{ url_for('static', filename='favico/android-chrome-512x512.png') }}" alt="D3adCow1220" height="32" class="me-2">
         </div>
     </div>
 </nav>
 </body>
-<!-- required for gallery, jQuery at first, Lightbox2 -->
+<!-- required for gallery, jQuery at first, Lightbox2 and tooltip JS-->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+{% include 'includes/tooltip_js.htm' %}
 </html>
 <!-- end: footer block -->
