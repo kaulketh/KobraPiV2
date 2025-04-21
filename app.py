@@ -19,7 +19,7 @@ from services import ACTIONS, SYSTEMD, get_info
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO
 
-VERSION = "v2"
+VERSION = "V2"
 
 # Flask configuration
 APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
@@ -258,8 +258,8 @@ def debug():
 
     return render_template("debug.html",
                            title="🐍 KobraPi – Debug Zone ",
-                           version="v1.0.0",
-                           # Optional: Dynamisch aus Git holen
+                           # version="v2.0.0",
+                           # option: dynamically from Git
                            timestamp=datetime.now().strftime(
                                "%Y-%m-%d %H:%M:%S"),
                            osinfo=platform.platform(),
