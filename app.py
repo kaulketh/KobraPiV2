@@ -17,9 +17,7 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_info
 from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
-    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO
-
-VERSION = "V2"
+    POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_LTSTRL
 
 # Flask configuration
 APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
@@ -32,6 +30,16 @@ app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
 CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
+
+
+def __get_release_tag(repo=REPO_LTSTRL):
+    url = repo
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()["tag_name"]
+    else:
+        return "unknown"
+
 
 # setup gallery
 global img_orientation
@@ -88,7 +96,7 @@ for filename in gallery:
 @kobra_bp.app_context_processor
 def inject_context():
     return dict(
-        version=VERSION,
+        version=__get_release_tag(),
         navigation=NAVI,
         status_path=STATUS.path,
         pfx=APPLICATION_ROOT,
@@ -257,7 +265,7 @@ def debug():
     import os
 
     return render_template("debug.html",
-                           title="", #🐍 KobraPi – Debug Zone ",
+                           title="",  # 🐍 KobraPi – Debug Zone ",
                            # version="v2.0.0",
                            # option: dynamically from Git
                            timestamp=datetime.now().strftime(

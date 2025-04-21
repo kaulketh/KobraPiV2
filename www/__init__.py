@@ -13,6 +13,7 @@ class AttrDict(dict):
 
 ROOT = "kobra"
 REPO = "https://github.com/kaulketh/KobraPiV2"
+REPO_LTSTRL = "https://api.github.com/repos/kaulketh/KobraPiV2/releases/latest"
 EXTENSION = ".html"
 
 STR_EMPTY = ""
