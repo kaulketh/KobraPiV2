@@ -101,6 +101,7 @@ MADE = AttrDict({KEY.path: f"{STR_SLASH}made",
 STATUS = AttrDict({KEY.path: f"{STR_SLASH}status"})
 
 # navigation elements order
+# TODO: see https://github.com/kaulketh/KobraPiV2/issues/12
 NAVI = [
     {KEY.name: INDEX.navi, KEY.ep: f"{ROOT}.{INDEX.id}",
      KEY.id: INDEX.id, KEY.title: f"{INDEX.title[:17]}..."},
