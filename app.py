@@ -87,7 +87,7 @@ for filename in gallery:
 
 def __get_version():
     version_info = ""
-    u_str = "unknown"
+    u_str = "-"
 
     def commit_hash():
         c_hash = ""
@@ -105,7 +105,7 @@ def __get_version():
         version_info += response.json()["tag_name"]
     else:
         version_info += u_str
-    return f"{version_info}-{commit_hash()}"
+    return f"{version_info} {commit_hash()}"
 
 
 # Server routes

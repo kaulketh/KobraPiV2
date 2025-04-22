@@ -38,7 +38,7 @@ INDEX = AttrDict({KEY.path: STR_SLASH,
                   KEY.id: "index",
                   KEY.template: f"index{EXTENSION}",
                   KEY.navi: "start",
-                  KEY.title: "a dead cow and a kobra or three W and a M",
+                  KEY.title: "a dead cow and a kobra or four W",
                   KEY.nfo: STR_EMPTY,
                   KEY.hint: STR_EMPTY
                   })
