@@ -80,15 +80,6 @@ SRVCS = AttrDict({KEY.path: f"{STR_SLASH}services",
                   KEY.hint: STR_EMPTY
                   })
 
-ABOUT = AttrDict({KEY.path: f"{STR_SLASH}about",
-                  KEY.template: f"about{EXTENSION}",
-                  KEY.navi: "info",
-                  KEY.id: "about",
-                  KEY.title: "information",
-                  KEY.nfo: STR_EMPTY,
-                  KEY.hint: STR_EMPTY
-                  })
-
 MADE = AttrDict({KEY.path: f"{STR_SLASH}made",
                  KEY.template: f"made{EXTENSION}",
                  KEY.navi: "made",
@@ -101,7 +92,6 @@ MADE = AttrDict({KEY.path: f"{STR_SLASH}made",
 STATUS = AttrDict({KEY.path: f"{STR_SLASH}status"})
 
 # navigation elements order
-# TODO: see https://github.com/kaulketh/KobraPiV2/issues/12
 NAVI = [
     {KEY.name: INDEX.navi, KEY.ep: f"{ROOT}.{INDEX.id}",
      KEY.id: INDEX.id, KEY.title: f"{INDEX.title[:17]}..."},
@@ -111,10 +101,6 @@ NAVI = [
      KEY.id: CAMS.id, KEY.title: f"{CAMS.title[:17]}..."},
     {KEY.name: SRVCS.navi, KEY.ep: f"{ROOT}.{SRVCS.id}",
      KEY.id: SRVCS.id, KEY.title: f"{SRVCS.title[:17]}..."},
-    {KEY.name: ABOUT.navi, KEY.ep: f"{ROOT}.{ABOUT.id}",
-     KEY.id: ABOUT.id, KEY.title: f"{ABOUT.title[:17]}..."},
     {KEY.name: MADE.navi, KEY.ep: f"{ROOT}.{MADE.id}",
      KEY.id: MADE.id, KEY.title: f"{MADE.title[:17]}..."}  # ,s
-    # {KEY.name: PRIVAT.navi, KEY.ep: f"{ROOT}.{PRIVAT.id}",
-    # KEY.id: PRIVAT.id, KEY.title: PRIVAT.title},
 ]
