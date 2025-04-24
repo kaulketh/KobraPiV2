@@ -1,35 +1,38 @@
-{# TODO: see https://github.com/kaulketh/KobraPiV2/issues/12 #}
-<div class="card text-bg-light mb-3 text-justify" style="border: none">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="p-3 border border-3 border-secondary shadow-lg rounded">
-                <img src="{{ url_for('static', filename='images/kobrapi.png')}}" class="img-fluid rounded-start" alt="KobraPi">
+<div class="container mt-5">
+    <div class="card bg-dark text-light text-justify shadow-lg rounded-4 border border-success">
+    {# <div class="card text-bg-light mb-3 text-justify" style="border: none"> #}
+        <div class="row">
+            <div class="col-md-4">
+                {# <div class="p-3 border border-3 border-secondary shadow-lg rounded"> #}
+                <div class="p-3 rounded-4 shadow-lg">
+                    <img src="{{ url_for('static', filename='images/kobrapi.png')}}" class="img-fluid rounded-start" alt="KobraPi">
+                </div>
             </div>
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">KobraPi</h5>
-                <p class="card-text text-muted">
-                    <span>Raspberry Pi 4 to control and observe 3D printer and its enclosure.<br></span>
-                    <span id="pwr"></span>
-                </p>
-                <h6 class="card-subtitle mb-2">operating system</h6>
-                <p class="card-text text-muted">
-                    <span id="os"></span>
-                    <br>
-                    <span id="kernel"></span>
-                </p>
-                <h6 class="card-subtitle mb-2">device info</h6>
-                <p class="card-text text-muted">
-                    <span id="cores"></span>
-                    <br>
-                    <span id="freq"></span>
-                    <span id="cpu"></span>
-                    <br>
-                    <span id="ram"></span>
-                    <br>
-                    <span id="temp"></span>
-                </p>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">KobraPi</h5>
+                    <p class="card-text text-muted">
+                        <span>Raspberry Pi 4 to control and observe 3D printer and its enclosure.<br></span>
+                        <span id="pwr"></span>
+                    </p>
+                    <h6 class="card-subtitle mb-2">operating system</h6>
+                    <p class="card-text text-muted">
+                        <span id="os"></span>
+                        <br>
+                        <span id="kernel"></span>
+                    </p>
+                    <h6 class="card-subtitle mb-2">device info</h6>
+                    <p class="card-text text-muted">
+                        <span id="cores"></span>
+                        <br>
+                        <span id="freq"></span>
+                        <span id="cpu"></span>
+                        <br>
+                        <span id="ram"></span>
+                        <br>
+                        <span id="temp"></span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -52,11 +55,11 @@
                 pwrSpan.textContent = `Current total power consumption: ${data.devices.main.power || 0}W`;
                 osSpan.textContent = `${data.system.os || "unknown"} ${data.system.osVersion || "unknown"}`;
                 kernelSpan.textContent = `Kernel ${data.system.kernel || "unknown"}`;
-                coreSpan.textContent = `Physical cores: ${data.system.cpuCores || 0}, logical cores: ${data.system.cpuThreads || 0}`;
-                freqSpan.textContent = `Frequency: ${data.system.cpuFq || 0}Hz`;
-                cpuSpan.textContent = `CPU load: ${data.system.cpu || 0}%`;
-                ramSpan.textContent = `RAM usage: ${data.system.ram || 0}% of ${data.system.ramGB || 0}GB`;
-                tempSpan.textContent = `Temperature: ${data.system.cpuTemp || 0}°C`;
+                coreSpan.innerHTML = `Cores:<br> - physical: ${data.system.cpuCores || 0}<br> - logical: ${data.system.cpuThreads || 0}`;
+                freqSpan.innerHTML = `Frequency: <span class="highlight">${data.system.cpuFq || 0}</span> Hz<br>`;
+                cpuSpan.innerHTML = `CPU load: <span class="highlight">${data.system.cpu || 0}%</span>`;
+                ramSpan.innerHTML = `RAM usage: <span class="highlight">${data.system.ram || 0}%</span> of ${data.system.ramGB || 0}GB`;
+                tempSpan.innerHTML = `Temperature: <span class="highlight">${data.system.cpuTemp || 0}</span>°C`;
                 }
         } catch (error) {
             console.error("Error fetching system info:", error);
