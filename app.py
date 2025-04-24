@@ -87,7 +87,7 @@ for filename in gallery:
 
 def __get_version():
     version_info = ""
-    u_str = "-"
+    u_str = ""  # "-"
 
     def commit_hash():
         c_hash = ""
