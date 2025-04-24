@@ -310,3 +310,6 @@ pre {
     color: #20c997; /* Textfarbe für den ASCII-Text */
     line-height: 1.4; /* Zeilenhöhe anpassen für bessere Lesbarkeit */
   }
+.highlight {
+    color: #e83e8c;
+  }

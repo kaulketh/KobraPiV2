@@ -1,8 +1,10 @@
+import subprocess
 import os
 import platform
 import subprocess
 import sys
 import time
+from datetime import datetime
 
 import psutil
 import requests
@@ -16,7 +18,7 @@ from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
 from gunicorn_config import workers
 from services import ACTIONS, SYSTEMD, get_info
-from www import ABOUT, INDEX, MADE, CAMS, SRVCS, \
+from www import INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_RELEASE, \
     REPO_COMMIT
 
@@ -85,7 +87,7 @@ for filename in gallery:
 
 def __get_version():
     version_info = ""
-    u_str = "unknown"
+    u_str = "-"
 
     def commit_hash():
         c_hash = ""
@@ -103,7 +105,7 @@ def __get_version():
         version_info += response.json()["tag_name"]
     else:
         version_info += u_str
-    return f"{version_info}-{commit_hash()}"
+    return f"{version_info} {commit_hash()}"
 
 
 # Server routes
@@ -133,14 +135,6 @@ def gallery_image(file):
 
 
 # GET requests
-@kobra_bp.route(ABOUT.path, methods=['GET'])
-def about():
-    return render_template(
-        ABOUT.template,
-        active_page=ABOUT.id,
-        title=ABOUT.title)
-
-
 @kobra_bp.route(CAMS.path, methods=['GET'])
 def cams():
     cams_on = fetch_power(CAMS.id) > 0
@@ -275,10 +269,6 @@ def status():
 
 @kobra_bp.route('/debug')
 def debug():
-    from datetime import datetime
-    import platform
-    import os
-
     return render_template("debug.html",
                            timestamp=datetime.now().strftime(
                                "%Y-%m-%d %H:%M:%S"),
