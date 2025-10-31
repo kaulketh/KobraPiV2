@@ -2,8 +2,8 @@ import sys
 
 import requests
 
-from .tasmota import fetch_state
 import auth
+from .tasmota import fetch_state
 
 CAMERA_CLOCK = 10  # XCLK max 20
 CAMERA_QUALITY = 4  # 4-63
@@ -29,9 +29,9 @@ CAMERA_REQUESTS = {
 }
 
 ESP32_CAMERAS = {
-    "cam1": {"name": "Left", "ip": auth.cam_ips[0]},
+    # "cam1": {"name": "Left", "ip": auth.cam_ips[0]},
     "cam2": {"name": "Back", "ip": auth.cam_ips[1]},
-    "cam3": {"name": "Right", "ip":auth.cam_ips[2] }
+    "cam3": {"name": "Right", "ip": auth.cam_ips[2]}
 }
 
 

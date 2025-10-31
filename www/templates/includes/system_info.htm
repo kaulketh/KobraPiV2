@@ -10,7 +10,7 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">KobraPi</h5>
+{#                    <h5 class="card-title">KobraPi</h5>#}
                     <p class="card-text text-muted">
                         <span>Raspberry Pi 4 to control and observe 3D printer and its enclosure.<br></span>
                         <span id="pwr"></span>
@@ -52,7 +52,7 @@
                 const ramSpan = document.getElementById(`ram`);
                 const tempSpan = document.getElementById(`temp`);
 
-                pwrSpan.textContent = `Current total power consumption: ${data.devices.main.power || 0}W`;
+                pwrSpan.innerHTML = `Current total power consumption: <span class="highlight">${data.devices.main.power || 0}</span>W`;
                 osSpan.textContent = `${data.system.os || "unknown"} ${data.system.osVersion || "unknown"}`;
                 kernelSpan.textContent = `Kernel ${data.system.kernel || "unknown"}`;
                 coreSpan.innerHTML = `Cores:<br> - physical: ${data.system.cpuCores || 0}<br> - logical: ${data.system.cpuThreads || 0}`;
