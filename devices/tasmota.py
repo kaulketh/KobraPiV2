@@ -6,7 +6,7 @@ import auth
 
 TASMOTA_SOCKETS = {
     "main": {"name": "Main", "url": f"http://{auth.tsm_ips[0]}/cm"},
-    "cams": {"name": "Video", "url": f"http://{auth.tsm_ips[1]}/cm"},
+    # "cams": {"name": "Video", "url": f"http://{auth.tsm_ips[1]}/cm"},
     "lights": {"name": "Light", "url": f"http://{auth.tsm_ips[2]}/cm"},
     "printer": {"name": "Printer", "url": f"http://{auth.tsm_ips[3]}/cm"}
 }

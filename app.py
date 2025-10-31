@@ -1,4 +1,3 @@
-import subprocess
 import os
 import platform
 import subprocess
@@ -65,7 +64,7 @@ def __correct_orientation(image_path):
 
 
 def __create_thumbnail(image_path, thumbnail_path, size=(200, 150)):
-    """correct orientation and create thumbnail for each gallery image."""
+    """correct orientation and create a thumbnail for each gallery image."""
     img = __correct_orientation(image_path)
     img.thumbnail(size)
     img.save(thumbnail_path)
@@ -75,11 +74,11 @@ for filename in gallery:
     if filename.endswith(('.jpg', '.png', '.jpeg', '.gif')):
         full_path = os.path.join(GALLERY, filename)
         thumb_path = os.path.join(THUMBS, filename)
-        # create thumbnail if not exists
+        # create a thumbnail if not exists
         if not os.path.exists(thumb_path):
             __create_thumbnail(full_path, thumb_path)
         thumbs.append(filename)
-    thumbs.sort()
+thumbs.sort()
 
 
 # end setup gallery
