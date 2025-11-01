@@ -78,7 +78,7 @@ for filename in gallery:
         if not os.path.exists(thumb_path):
             __create_thumbnail(full_path, thumb_path)
         thumbs.append(filename)
-thumbs.sort()
+thumbs.sort(reverse=True)
 
 
 # end setup gallery
