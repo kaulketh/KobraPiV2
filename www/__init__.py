@@ -1,6 +1,6 @@
 class AttrDict(dict):
     """
-    Attribute Dictionary, is the same as a python native dictionary,except
+    Attribute dictionary is the same as a python native dictionary, except
     that in most cases, you can use the dictionary key as if it was an
     object attribute instead. So it is possible to access items in the
     dictionary using attribute-style access and vice versa to set items in

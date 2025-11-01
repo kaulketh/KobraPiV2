@@ -9,7 +9,7 @@ workers = 9
 # Threads per worker to support concurrent connections
 threads = 4
 
-# Timeout in seconds for long requests (e.g. for video streams)
+# Timeout in seconds for long requests (e.g., for video streams)
 # Maximum time (in seconds) that Gunicorn will wait for a request will wait
 # for a request
 timeout = 300

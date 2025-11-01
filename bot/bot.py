@@ -8,7 +8,7 @@ import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-# add parent directory (..) to sys.path to avoid possible import problems
+# add a parent directory (..) to sys.path to avoid possible import problems
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import auth
 import devices
@@ -81,7 +81,7 @@ def __power_keyboard():
             InlineKeyboardButton(text=f"{icon} {data['name']}",
                                  callback_data=f"tasmota:{key}"))
         time.sleep(.500)
-    # Snapshot button only, when cams are powered!
+    # Snapshot button only when cams are powered!
     if cams_powered:
         mrkup = InlineKeyboardMarkup(
             inline_keyboard=[tasmota_btns, snapshot_btn])
