@@ -77,6 +77,8 @@ for filename in gallery:
         # create a thumbnail if not exists
         if not os.path.exists(thumb_path):
             __create_thumbnail(full_path, thumb_path)
+            # set permissions to 777
+            os.chmod(thumb_path, 0o777)
         thumbs.append(filename)
 thumbs.sort(reverse=True)
 
