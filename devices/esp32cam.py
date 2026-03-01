@@ -1,3 +1,31 @@
+"""
+This module provides functionality to set up and retrieve information about ESP32 cameras.
+
+The module supports configuring camera parameters such as resolution, quality, and clock
+frequency, and allows accessing metadata about connected ESP32 cameras. It interacts
+with external systems to fetch the state of cameras and sends HTTP requests to configure
+the cameras.
+
+Attributes:
+    CAMERA_CLOCK (int): Clock frequency for the ESP32 cameras, with a maximum of 20.
+    CAMERA_QUALITY (int): Quality setting for the ESP32 cameras, ranging between 4-63.
+    CAMERA_RESOLUTION (str): Default resolution identifier for the ESP32 cameras.
+    CAMERA_RESOLUTIONS (dict): A mapping of resolution identifiers to their respective
+        attributes such as value, width, and height.
+    CAMERA_RES (int): Numerical value of the default camera resolution.
+    CAMERA_WIDTH (int): Width of the default camera resolution.
+    CAMERA_HEIGHT (int): Height of the default camera resolution.
+    CAMERA_REQUESTS (dict): Mapping of camera setup actions to their corresponding
+        HTTP request URLs.
+    ESP32_CAMERAS (dict): Dictionary containing information about ESP32 cameras, such
+        as name and IP address.
+
+Functions:
+    setup_cameras(): Configures the connected cameras based on predefined settings
+        if the camera state is enabled. Handles any connection or configuration errors.
+    cameras(): Retrieves metadata about the configured ESP32 cameras, including their
+        dimensions, names, and identifiers.
+"""
 import sys
 
 import requests

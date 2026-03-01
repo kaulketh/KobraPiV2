@@ -1,3 +1,31 @@
+"""
+This module sets up a Flask-based server handling various routes and systems for Kobra2+Control.
+It includes functionalities such as multimedia gallery management, system status monitoring,
+device control, and service management. The server integrates device states via Tasmota,
+systemd services, and hardware monitoring libraries. The server also leverages Flask extensions
+for custom routing and rendering.
+
+The module includes the following key parts and functionalities:
+
+- Flask application setup for the server and its routing.
+- Multimedia gallery with automatic thumbnail generation.
+- System service control using systemd.
+- Device toggle functionality via Tasmota sockets.
+- Real-time system performance and uptime status monitoring.
+
+Exception handling for external resources and proper directory management ensures resilience
+and maintainability.
+
+Attributes:
+    app (Flask): The main Flask application instance.
+    app_host (str): The host address where the Flask application runs.
+    APPLICATION_ROOT (str): The root URL path for the application.
+    kobra_bp (Blueprint): A Blueprint for organizing routes for the application.
+    GALLERY (str): Path to the gallery folder where images are stored.
+    THUMBS (str): Path to the thumbnails folder derived from the gallery.
+    gallery (list): Sorted list of all images found in the gallery folder.
+    thumbs (list): Sorted list of all thumbnails corresponding to images in the gallery.
+"""
 import os
 import platform
 import subprocess

@@ -1,3 +1,43 @@
+"""
+The module defines constants and an attribute dictionary class that facilitates
+attribute-style access to dictionary keys. Additionally, it provides configuration
+data for paths, templates, navigation, and various metadata for a structured web-based
+application.
+
+Classes:
+- AttrDict: Extends the native Python dictionary to allow attribute-style access to
+  dictionary keys.
+
+Constants:
+- ROOT: A string constant representing the root namespace or identifier.
+- REPO: A string constant indicating the GitHub repository link.
+- REPO_RELEASE: A string constant for the latest release API endpoint of the repository.
+- REPO_COMMIT: A string constant for the master commit API endpoint of the repository.
+- EXTENSION: The default file extension used in templates.
+- STR_EMPTY: A constant representing an empty string.
+- STR_SLASH: A constant for the slash character.
+- STR_UNDER_CONSTR: A string constant indicating "under construction" status.
+- STR_WIP: A string constant indicating "work in progress" status.
+
+Structured dictionaries (instances of AttrDict):
+- KEY: Contains attribute keys for path, ID, template, navigation, title, additional
+  info, hints, and name.
+- INDEX: Metadata for the index page, including path, template, navigation title, and
+  other information.
+- CAMS: Metadata for the live streams page with warnings about single access use.
+- PRIVAT: Metadata for the privacy/legal notice page.
+- POWER: Metadata for the power status page.
+- SRVCS: Metadata for the services page, describing system services.
+- MADE: Metadata for the "made in and for 3D" page, including its title, description,
+  and status as a work in progress.
+- STATUS: Metadata for a generic status page.
+
+NAVI:
+- A list of navigation elements, detailing the order, names, endpoints, IDs, and
+  truncated titles for various sections in the application.
+"""
+
+
 class AttrDict(dict):
     """
     Attribute dictionary is the same as a python native dictionary, except
