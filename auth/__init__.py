@@ -15,6 +15,7 @@ AUTH = HTTPBasicAuth()
 def verify_password(name, psswd):
     if name in uss and check_password_hash(uss.get(name), psswd):
         return name
+    return None
 
 
 # telegram

@@ -33,7 +33,7 @@ CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
 
-# setup gallery
+# set up a gallery
 global img_orientation
 GALLERY = os.path.join(app.static_folder, 'gallery')
 THUMBS = os.path.join(GALLERY, 'thumbs')
@@ -77,8 +77,10 @@ for filename in gallery:
         # create a thumbnail if not exists
         if not os.path.exists(thumb_path):
             __create_thumbnail(full_path, thumb_path)
+            # set permissions to 777
+            os.chmod(thumb_path, 0o777)
         thumbs.append(filename)
-thumbs.sort()
+thumbs.sort(reverse=True)
 
 
 # end setup gallery
@@ -204,6 +206,7 @@ def control(action, service):
         url = f"{ROOT}.{SRVCS.id}" if service != SYSTEMD[
             0] else f"{ROOT}.{INDEX.id}"
         return redirect(url_for(url))
+    return None
 
 
 @kobra_bp.route(f"{STR_SLASH}toggle/<device_id>", methods=["POST"])

@@ -3,23 +3,21 @@ import subprocess
 
 import auth
 
-# systemd services
-#               this             pwr                bot              fan
-SYSTEMD = [auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]]
-ACTIONS = ["stop", "start", "restart"]
+ACTIONS = "stop", "start", "restart"
 STR_ACTIVE = "active"
 STR_INACTIVE = "inactive"
+SYSTEMD = auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]
 
 
-def __sudo_control(action, service):
+def __sudo_control(action: str, service: str):
     os.system(f"sudo systemctl {action} {service}")
 
 
-def start(service):
+def start(service: str):
     __sudo_control(ACTIONS[1], service)
 
 
-def stop(service):
+def stop(service: str):
     __sudo_control(ACTIONS[0], service)
 
 
