@@ -35,7 +35,7 @@ from .tasmota import fetch_state
 
 CAMERA_CLOCK = 10  # XCLK max 20
 CAMERA_QUALITY = 4  # 4-63
-CAMERA_RESOLUTION = "VGA"
+CAMERA_RESOLUTION = "XGA"
 
 CAMERA_RESOLUTIONS = {
     "VGA": {"value": 10, "width": 640, "height": 480},
