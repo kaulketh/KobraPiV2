@@ -57,7 +57,7 @@ CAMERA_REQUESTS = {
 }
 
 ESP32_CAMERAS = {
-    # "cam1": {"name": "Left", "ip": auth.cam_ips[0]},
+    "cam1": {"name": "Left", "ip": auth.cam_ips[0]},
     "cam2": {"name": "Back", "ip": auth.cam_ips[1]},
     "cam3": {"name": "Right", "ip": auth.cam_ips[2]}
 }
