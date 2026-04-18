@@ -1,3 +1,18 @@
+"""
+Module for managing system services using systemctl.
+
+This module provides utility functions to start, stop, restart, and retrieve
+information about system services by interfacing with systemctl. The functions
+in this module require superuser privileges to perform their actions.
+
+Attributes:
+ACTIONS: A tuple containing valid service actions, including 'stop', 'start',
+         and 'restart'.
+STR_ACTIVE: A string constant representing the active state of a service.
+STR_INACTIVE: A string constant representing the inactive state of a service.
+SYSTEMD: A tuple containing systemd authentication credentials sourced
+         from the auth module.
+"""
 import os
 import subprocess
 

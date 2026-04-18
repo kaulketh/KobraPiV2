@@ -1,3 +1,23 @@
+"""
+Provides functionality to control IoT devices, retrieve snapshots, and manage services via a Telegram bot.
+
+This module includes functions to handle incoming messages and button clicks on the Telegram bot, toggle IoT devices,
+and retrieve statuses for systemd services and connected devices. It also provides methods for capturing
+snapshots from cameras and sending notifications or updates to the bot user.
+
+Functions:
+- __service_keyboard: Generates the keyboard for managing systemd services.
+- __power_keyboard: Generates the keyboard for controlling power consumption and devices.
+- _take_snapshots: Captures and rotates snapshots from connected cameras.
+- _toggle_tasmota: Toggles the state of a Tasmota-configured device.
+- _toggle_service: Starts or stops a systemd service based on its current state.
+- _get_pwr: Retrieves power consumption data for a given IoT device.
+- admin: Checks if the given chat ID matches the authorized admin ID.
+- state_update: Gathers and sends the current status of services and devices to the bot.
+- on_message: Handles incoming messages sent to the Telegram bot.
+- on_callback_query: Handles button clicks received by the Telegram bot.
+- main: Runs the bot's update handling and polling loop.
+"""
 import io
 import os
 import sys
