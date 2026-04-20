@@ -1,26 +1,45 @@
 """
-This module provides utility functions to control and monitor system services using systemd commands.
+Module providing service management functions for system control using systemd.
 
-The functions in this module allow users to start, stop, restart, enable, disable, and retrieve information about
-services. It also includes functionality to ensure that a service is running and appropriately enabled.
+This module facilitates managing system services through actions like starting, stopping,
+enabling, disabling, and restarting. It also provides functions to ensure that a service
+is running, retrieve service state information, and send alerts in case of service issues.
 
 Functions:
-- control_service: Executes a specific action on a given service.
-- enable: Enables a service.
-- disable: Disables a service.
-- start: Starts a service.
-- stop: Stops a service.
-- restart: Restarts a service.
-- get_info: Retrieves information about a service, including its status and description.
-- ensure_running: Ensures a service is running and enabled.
+- control_service(action, service): Executes a system command to control a service.
+- enable(service): Enables a system service.
+- disable(service): Disables a system service.
+- start(service): Starts a system service.
+- stop(service): Stops a system service.
+- restart(service): Restarts a system service.
+- get_info(service): Retrieves status, enablement, and description information of a service.
+- ensure_running(service): Validates and enforces the running state of a service.
 """
 import subprocess
 import sys
 from time import sleep
 
+import requests
+
+# add a parent directory (..) to sys.path to avoid possible import problems
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import auth
+
 ACTIONS = "stop", "start", "restart", "enable", "disable"
 STR_ACTIVE = "active"
 STR_INACTIVE = "inactive"
+
+TELEGRAM_TOKEN = auth.TELEGRAM_TOKEN
+CHAT_ID = auth.CHAT_ID
+
+
+def __send_alert(message: str):
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {"chat_id": CHAT_ID, "text": message}
+    try:
+        requests.post(url, json=payload, timeout=5)
+    except Exception as e:
+        sys.stderr(f"Telegram error: {e}")
 
 
 def __get_pro_state(service, name):
@@ -68,22 +87,36 @@ def ensure_running(service):
     def is_active():
         return get_info(service)["status"] == STR_ACTIVE
 
-    if not is_active():
-        if get_info(service)["enabled"] == "enabled":
-            restart(service)
-            sleep(sleep_time)
-            if is_active():
-                sys.stdout.write(f"Service '{service}' restarted.\n")
-                return
-        else:
-            enable(service)
-            if get_info(service)["enabled"] == "enabled":
-                start(service)
-                sleep(sleep_time)
-                if is_active():
-                    sys.stdout.write(
-                        f"Service '{service}' re-enabled an started.\n")
-                    return
-    else:
-        sys.stdout.write(f"Service '{service}' is running = {is_active()}\n")
+    # Service is running → nothing to do
+    if is_active():
         return
+
+    # Service is NOT running → send alert
+    __send_alert(
+        f"⚠️ Service '{service}' is not active. Attempting recovery...")
+
+    # If enabled → restart
+    if get_info(service)["enabled"] == "enabled":
+        restart(service)
+        sleep(sleep_time)
+        if is_active():
+            __send_alert(
+                f"✅ Service '{service}' has been successfully restarted.")
+            return
+        else:
+            __send_alert(f"❌ Service '{service}' could NOT be restarted!")
+            return
+
+    # If disabled → enable + start
+    enable(service)
+    if get_info(service)["enabled"] == "enabled":
+        start(service)
+        sleep(sleep_time)
+        if is_active():
+            __send_alert(
+                f"🔧 Service '{service}' was enabled and started successfully.")
+            return
+        else:
+            __send_alert(
+                f"❌ Service '{service}' could NOT be started even after enabling!")
+            return
