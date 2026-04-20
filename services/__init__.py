@@ -15,6 +15,7 @@ Functions:
 - get_info(service): Retrieves status, enablement, and description information of a service.
 - ensure_running(service): Validates and enforces the running state of a service.
 """
+import os
 import subprocess
 import sys
 from time import sleep
