@@ -44,7 +44,7 @@ POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start powe
 POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
 cams = devices.ESP32_CAMERAS
 socks = devices.TASMOTA_SOCKETS
-srvcs = services.SYSTEMD
+srvcs = auth.systemd
 
 global cams_powered
 
