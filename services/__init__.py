@@ -25,20 +25,23 @@ import requests
 # add a parent directory (..) to sys.path to avoid possible import problems
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import auth
+import bot
 
 ACTIONS = "stop", "start", "restart", "enable", "disable"
 STR_ACTIVE = "active"
 STR_INACTIVE = "inactive"
 
-TELEGRAM_TOKEN = auth.TELEGRAM_TOKEN
-CHAT_ID = auth.CHAT_ID
+t_token = auth.TELEGRAM_TOKEN
+t_cid = auth.CHAT_ID
 
 
 def __send_alert(message: str):
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message}
+    url = f"https://api.telegram.org/bot{t_token}/sendMessage"
+    payload = {"chat_id": t_cid, "text": message}
     try:
-        requests.post(url, json=payload, timeout=5)
+        response = requests.post(url, json=payload, timeout=5)
+        if response:
+            bot.state_update(t_cid)
     except Exception as e:
         sys.stderr(f"Telegram error: {e}")
 
