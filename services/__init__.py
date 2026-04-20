@@ -13,40 +13,70 @@ STR_INACTIVE: A string constant representing the inactive state of a service.
 SYSTEMD: A tuple containing systemd authentication credentials sourced
          from the auth module.
 """
-import os
 import subprocess
+from time import sleep
 
 import auth
 
-ACTIONS = "stop", "start", "restart"
+ACTIONS = "stop", "start", "restart", "enable", "disable"
 STR_ACTIVE = "active"
 STR_INACTIVE = "inactive"
-SYSTEMD = auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]
 
 
-def __sudo_control(action: str, service: str):
-    os.system(f"sudo systemctl {action} {service}")
+
+def __get_pro_state(service, name, prop_des=None):
+    return subprocess.run(['systemctl', name, service, prop_des],
+                          capture_output=True, text=True).stdout.strip()
+
+
+def control_service(action: str, service: str):
+    subprocess.run(['sudo', 'systemctl', action, service])
+
+
+def enable(service: str):
+    control_service(ACTIONS[3], service)
+
+
+def disable(service: str):
+    control_service(ACTIONS[4], service)
 
 
 def start(service: str):
-    __sudo_control(ACTIONS[1], service)
+    control_service(ACTIONS[1], service)
 
 
 def stop(service: str):
-    __sudo_control(ACTIONS[0], service)
+    control_service(ACTIONS[0], service)
 
 
 def restart(service: str):
-    __sudo_control(ACTIONS[2], service)
+    control_service(ACTIONS[2], service)
 
 
 def get_info(service):
-    state = subprocess.run(['systemctl', 'is-active', service],
-                           capture_output=True, text=True).stdout.strip()
-    enabled = subprocess.run(['systemctl', 'is-enabled', service],
-                             capture_output=True, text=True).stdout.strip()
-    description = subprocess.run(
-        ['systemctl', 'show', service, '--property=Description'],
-        capture_output=True, text=True).stdout.strip()
+    state = __get_pro_state(service, "is-active")
+    enabled = __get_pro_state(service, "is-enabled")
+    description = __get_pro_state(service, "show", "--property=Description")
     description = description.replace("Description=", "").strip()
     return {"status": state, "enabled": enabled, "description": description}
+
+
+def ensure_running(service):
+    sleep_time = 3
+
+    def is_active():
+        return get_info(service)["status"] == STR_ACTIVE
+
+    if not is_active():
+        if get_info(service)["enabled"] == "enabled":
+            restart(service)
+            sleep(sleep_time)
+            if is_active():
+                return
+        else:
+            enable(service)
+            if get_info(service)["enabled"] == "enabled":
+                start(service)
+                sleep(sleep_time)
+                if is_active():
+                    return

@@ -28,7 +28,6 @@ Attributes:
 """
 import os
 import platform
-import subprocess
 import sys
 import time
 from datetime import datetime
@@ -44,7 +43,7 @@ from auth import AUTH, CHAT_ID, KOBRA_BOT
 from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
 from gunicorn_config import workers
-from services import ACTIONS, SYSTEMD, get_info
+from services import ACTIONS, SYSTEMD, get_info, control_service
 from www import INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_RELEASE, \
     REPO_COMMIT
@@ -230,7 +229,7 @@ def services():
 @AUTH.login_required
 def control(action, service):
     if service in SYSTEMD and action in ACTIONS:
-        subprocess.run(['sudo', 'systemctl', action, service])
+        control_service(action, service)
         url = f"{ROOT}.{SRVCS.id}" if service != SYSTEMD[
             0] else f"{ROOT}.{INDEX.id}"
         return redirect(url_for(url))
