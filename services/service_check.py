@@ -1,7 +1,18 @@
+"""
+A module to ensure specific services are running using systemd and service management tools.
+
+This program iterates over a list of systemd-managed services and ensures that they are in
+the running state. It imports authentication and service management modules to aid in this
+process.
+"""
+
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import auth
-from .services import ensure_running
+import services
 
-SYSTEMD = auth.systemd[0], auth.systemd[1], auth.systemd[2], auth.systemd[3]
-
-for svc in SYSTEMD:
-    ensure_running(svc)
+if __name__ == '__main__':
+    for svc in auth.systemd:
+        services.ensure_running(svc)

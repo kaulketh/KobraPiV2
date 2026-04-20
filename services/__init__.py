@@ -1,31 +1,30 @@
 """
-Module for managing system services using systemctl.
+This module provides utility functions to control and monitor system services using systemd commands.
 
-This module provides utility functions to start, stop, restart, and retrieve
-information about system services by interfacing with systemctl. The functions
-in this module require superuser privileges to perform their actions.
+The functions in this module allow users to start, stop, restart, enable, disable, and retrieve information about
+services. It also includes functionality to ensure that a service is running and appropriately enabled.
 
-Attributes:
-ACTIONS: A tuple containing valid service actions, including 'stop', 'start',
-         and 'restart'.
-STR_ACTIVE: A string constant representing the active state of a service.
-STR_INACTIVE: A string constant representing the inactive state of a service.
-SYSTEMD: A tuple containing systemd authentication credentials sourced
-         from the auth module.
+Functions:
+- control_service: Executes a specific action on a given service.
+- enable: Enables a service.
+- disable: Disables a service.
+- start: Starts a service.
+- stop: Stops a service.
+- restart: Restarts a service.
+- get_info: Retrieves information about a service, including its status and description.
+- ensure_running: Ensures a service is running and enabled.
 """
 import subprocess
+import sys
 from time import sleep
-
-import auth
 
 ACTIONS = "stop", "start", "restart", "enable", "disable"
 STR_ACTIVE = "active"
 STR_INACTIVE = "inactive"
 
 
-
-def __get_pro_state(service, name, prop_des=None):
-    return subprocess.run(['systemctl', name, service, prop_des],
+def __get_pro_state(service, name):
+    return subprocess.run(['systemctl', name, service],
                           capture_output=True, text=True).stdout.strip()
 
 
@@ -56,9 +55,11 @@ def restart(service: str):
 def get_info(service):
     state = __get_pro_state(service, "is-active")
     enabled = __get_pro_state(service, "is-enabled")
-    description = __get_pro_state(service, "show", "--property=Description")
-    description = description.replace("Description=", "").strip()
-    return {"status": state, "enabled": enabled, "description": description}
+    des = subprocess.run(
+        ['systemctl', "show", service, "--property=Description"],
+        capture_output=True, text=True).stdout.strip()
+    des = des.replace("Description=", "").strip()
+    return {"status": state, "enabled": enabled, "description": des}
 
 
 def ensure_running(service):
@@ -72,6 +73,7 @@ def ensure_running(service):
             restart(service)
             sleep(sleep_time)
             if is_active():
+                sys.stdout.write(f"Service '{service}' restarted.\n")
                 return
         else:
             enable(service)
@@ -79,4 +81,9 @@ def ensure_running(service):
                 start(service)
                 sleep(sleep_time)
                 if is_active():
+                    sys.stdout.write(
+                        f"Service '{service}' re-enabled an started.\n")
                     return
+    else:
+        sys.stdout.write(f"Service '{service}' is running = {is_active()}\n")
+        return
