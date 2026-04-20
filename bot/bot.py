@@ -36,11 +36,15 @@ import services
 
 kobra_bot = auth.KOBRA_BOT
 chat_id = auth.CHAT_ID
+
 BOT_NAME = "[Printer control] "
 BOT_NAME_VIEW = "[3D print area] "
+STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
+POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
+POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
 cams = devices.ESP32_CAMERAS
 socks = devices.TASMOTA_SOCKETS
-srvcs = services.SYSTEMD
+srvcs = auth.systemd
 
 global cams_powered
 
@@ -134,7 +138,7 @@ def _take_snapshots(cid, loop_delay=1):
                 kobra_bot.sendPhoto(
                     cid,
                     photo=image_io,
-                    caption=f"{BOT_NAME_VIEW}\n"
+                    caption=f"{BOT_NAME_VIEW} "
                             f"{cams.get(cam).get('name')} view",
                     disable_notification=True)
             else:
@@ -147,8 +151,8 @@ def _take_snapshots(cid, loop_delay=1):
             kobra_bot.sendMessage(
                 cid,
                 f"{BOT_NAME_VIEW} "
-                f"snapshot: {cams.get(cam).get('name').lower()}"
-                f" cam\nError: {e}")
+                f"couldn't take snapshot from "
+                f"{cams.get(cam).get('name').lower()}")
         finally:
             time.sleep(loop_delay)
 
@@ -201,8 +205,15 @@ def on_message(msg):
     text = msg.get("text", "").lower()
     if admin(cid):
         sys.stdout.write(f"Message from {cid}: {text}\n")
-        if text in {"start", "/start", "/status", "status", "/state", "state"}:
+        if text in STATE_CMD:
             state_update(cid)
+        elif text in POWER_ON_CMD:
+            # TODO: power on light, printer and cameras
+            kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
+        elif text in POWER_OFF_CMD:
+            # TODO power off all but not main power supply
+            kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
+
         else:
             kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
     else:

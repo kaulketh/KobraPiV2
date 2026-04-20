@@ -69,15 +69,14 @@ def fetch_socket_states():
     return states
 
 
-def fetch_power(device_id):
+def fetch_power(dev_id):
     try:
-        response = requests.get(TASMOTA_SOCKETS[device_id]["url"],
-                                params={"cmnd": "Status 8"})
-        response.raise_for_status()
-        pwr = response.json().get("StatusSNS", {}).get("ENERGY", {}).get(
-            "Power")
+        resp = requests.get(TASMOTA_SOCKETS[dev_id]["url"],
+                            params={"cmnd": "Status 8"})
+        resp.raise_for_status()
+        pwr = resp.json().get("StatusSNS", {}).get("ENERGY", {}).get("Power")
         return float(pwr) if pwr is not None else 0.0
     except requests.RequestException as e:
         sys.stderr.write(
-            f"Error during requesting power data of device {device_id}: {e}\n")
+            f"Error during requesting power data of device {dev_id}: {e}\n")
         return 0.0
