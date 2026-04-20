@@ -9,6 +9,7 @@ process.
 import os
 import sys
 
+# add a parent directory (..) to sys.path to avoid possible import problems
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import auth
 import services
