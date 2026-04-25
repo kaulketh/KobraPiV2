@@ -124,7 +124,7 @@ MADE = AttrDict({KEY.path: f"{STR_SLASH}made",
                  KEY.template: f"made{EXTENSION}",
                  KEY.navi: "made",
                  KEY.id: "made",
-                 KEY.title: "made in and for 3D",
+                 KEY.title: "what's possible",
                  KEY.nfo: "some impressions",
                  KEY.hint: STR_WIP
                  })
