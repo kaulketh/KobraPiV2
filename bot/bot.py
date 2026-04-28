@@ -264,26 +264,40 @@ def main():
 
     def poll_updates():
         last_update_id = None
+        backoff = 1  # start with 1 second
+        max_backoff = 60  # cap at 60 seconds
         while True:
             try:
                 updates = kobra_bot.getUpdates(
                     offset=last_update_id,
                     timeout=10,
                     allowed_updates=['message', 'callback_query'])
+
+                # If we reach this point → success → reset backoff
+                backoff = 1
                 for update in updates:
                     # increase offset
                     last_update_id = update["update_id"] + 1
                     handle_update(update)
+
             except KeyboardInterrupt:
                 sys.stderr.write('Loop interrupted\n')
                 exit()
+
             except Exception as e:
                 sys.stderr.write(
-                    f"Any error occurs: {traceback.format_exc()}\n")
+                    f"Polling error: {traceback.format_exc()}\n")
                 sys.stderr.write(f"{e}\n")
-                exit()
-            finally:
-                pass
+
+                # Apply exponential backoff
+                sys.stderr.write(f"Retrying in {backoff} seconds...\n")
+                time.sleep(backoff)  # cooldown
+
+                # Increase backoff for next time
+                backoff = min(backoff * 2, max_backoff)
+                continue  # DO NOT EXIT
+
+            # Normal delay between polls
             time.sleep(1)  # avoid API overload
 
     msg = "Bot is running..."
