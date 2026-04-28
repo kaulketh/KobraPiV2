@@ -43,7 +43,7 @@ from auth import systemd, AUTH, CHAT_ID, KOBRA_BOT
 from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
 from gunicorn_config import workers
-from services import ACTIONS, get_info, control_service
+from services import ACTIONS, get_service_info, control_service
 from www import INDEX, MADE, CAMS, SRVCS, \
     POWER, STATUS, NAVI, ROOT, STR_SLASH, PRIVAT, REPO, REPO_RELEASE, \
     REPO_COMMIT
@@ -216,7 +216,7 @@ def privacy():
 
 @kobra_bp.route(SRVCS.path, methods=['GET'])
 def services():
-    statuses = {service: get_info(service) for service in systemd}
+    statuses = {service: get_service_info(service) for service in systemd}
     return render_template(
         SRVCS.template,
         active_page=SRVCS.id,
