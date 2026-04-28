@@ -36,8 +36,9 @@ import services
 
 kobra_bot = auth.KOBRA_BOT
 chat_id = auth.CHAT_ID
-HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
 
+HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
+HEARTBEAT_ENABLED = True
 
 BOT_NAME = "[Printer control] "
 BOT_NAME_VIEW = "[3D print area] "
@@ -300,12 +301,13 @@ def main():
                 backoff = min(backoff * 2, max_backoff)
                 continue  # DO NOT EXIT
 
-            # heart beat
-            current_time = time.time()
-            if current_time - last_heartbeat > HEARTBEAT_INTERVAL:
-                kobra_bot.sendMessage(chat_id=chat_id,
-                                      text="💓 Bot is alive and running.")
-                last_heartbeat = current_time
+            if HEARTBEAT_ENABLED:
+                current_time = time.time()
+                if current_time - last_heartbeat > HEARTBEAT_INTERVAL:
+                    msg = "💓 Bot is alive and running."
+                    kobra_bot.sendMessage(chat_id=chat_id,
+                                          text=f"{BOT_NAME}\n{msg}")
+                    last_heartbeat = current_time
 
             # Normal delay between polls
             time.sleep(1)  # avoid API overload
