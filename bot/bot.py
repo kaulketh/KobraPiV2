@@ -36,6 +36,8 @@ import services
 
 kobra_bot = auth.KOBRA_BOT
 chat_id = auth.CHAT_ID
+HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
+
 
 BOT_NAME = "[Printer control] "
 BOT_NAME_VIEW = "[3D print area] "
@@ -63,7 +65,7 @@ def __service_keyboard():
     btns = []
     log = ""
     for s in srvcs:
-        state = services.get_info(s)['status']
+        state = services.get_service_info(s)['status']
         # "active", "inactive", "failed", etc.
         if state == services.STR_ACTIVE:
             icon = icon_active
@@ -166,7 +168,7 @@ def _toggle_tasmota(cid, socket_key, delay=3):
 
 
 def _toggle_service(cid, service, delay=3):
-    status = services.get_info(service)['status']
+    status = services.get_service_info(service)['status']
     sys.stdout.write(f"{service} is {status}\n")
     if admin(cid):
         if status == services.STR_ACTIVE:
@@ -175,7 +177,7 @@ def _toggle_service(cid, service, delay=3):
             services.restart(service)
     sys.stdout.write(
         f"change state of {service} to "
-        f"{services.get_info(service)['status']}\n")
+        f"{services.get_service_info(service)['status']}\n")
     time.sleep(delay)
 
 
@@ -263,6 +265,7 @@ def main():
             on_callback_query(update['callback_query'])
 
     def poll_updates():
+        last_heartbeat = 0
         last_update_id = None
         backoff = 1  # start with 1 second
         max_backoff = 60  # cap at 60 seconds
@@ -296,6 +299,13 @@ def main():
                 # Increase backoff for next time
                 backoff = min(backoff * 2, max_backoff)
                 continue  # DO NOT EXIT
+
+            # heart beat
+            current_time = time.time()
+            if current_time - last_heartbeat > HEARTBEAT_INTERVAL:
+                kobra_bot.sendMessage(chat_id=chat_id,
+                                      text="💓 Bot is alive and running.")
+                last_heartbeat = current_time
 
             # Normal delay between polls
             time.sleep(1)  # avoid API overload
