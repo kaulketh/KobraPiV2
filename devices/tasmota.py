@@ -1,16 +1,12 @@
 """
-This module manages Tasmota-enabled smart sockets, providing functionality to
-retrieve their states and power consumption.
+This module provides utilities to interact with Tasmota smart sockets.
 
-The `TASMOTA_SOCKETS` constant stores information about the sockets, including
-their names and URLs. The module includes functions to fetch socket states and
-power consumption values.
+It includes functionality to retrieve the states and power consumption of
+connected devices, as well as manage device communication over HTTP.
 
-Functions:
-- sockets: Returns detailed state and power data for all configured sockets.
-- fetch_state: Fetches the current state of a specific device.
-- fetch_socket_states: Retrieves states for all configured devices.
-- fetch_power: Retrieves power consumption data for a specific device.
+Attributes:
+    TASMOTA_SOCKETS (dict): A dictionary containing information about
+        Tasmota smart sockets, including their names and URLs.
 """
 import sys
 
