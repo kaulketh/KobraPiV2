@@ -1,19 +1,13 @@
 """
-Module providing service management functions for system control using systemd.
+A utility module for managing and monitoring Linux system services using `systemctl`.
 
-This module facilitates managing system services through actions like starting, stopping,
-enabling, disabling, and restarting. It also provides functions to ensure that a service
-is running, retrieve service state information, and send alerts in case of service issues.
+This module provides functions to control, monitor, and ensure the stability of system
+services. It integrates with Telegram for alert notifications. The module supports
+basic service actions such as start, stop, restart, enable, and disable, and also provides
+status information about services.
 
-Functions:
-- control_service(action, service): Executes a system command to control a service.
-- enable(service): Enables a system service.
-- disable(service): Disables a system service.
-- start(service): Starts a system service.
-- stop(service): Stops a system service.
-- restart(service): Restarts a system service.
-- get_info(service): Retrieves status, enablement, and description information of a service.
-- ensure_running(service): Validates and enforces the running state of a service.
+It assumes the presence of an imported `auth` module providing required Telegram credentials
+(TELEGRAM_TOKEN and CHAT_ID) and a `bot` module for updating the bot state.
 """
 import os
 import subprocess

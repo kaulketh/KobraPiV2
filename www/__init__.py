@@ -1,40 +1,44 @@
 """
-The module defines constants and an attribute dictionary class that facilitates
-attribute-style access to dictionary keys. Additionally, it provides configuration
-data for paths, templates, navigation, and various metadata for a structured web-based
-application.
+Module defining constants and utility structures for a web-based application.
+
+This module provides a set of constants and dictionaries used for defining
+navigation elements, templates, and other configurations in a structured
+manner. It includes utility structures, such as an attribute-enabled dictionary
+class, and establishes the configuration for various application components
+like pages and navigation.
 
 Classes:
-- AttrDict: Extends the native Python dictionary to allow attribute-style access to
-  dictionary keys.
+- AttrDict: A dictionary-like class that allows accessing keys as attributes.
 
 Constants:
-- ROOT: A string constant representing the root namespace or identifier.
-- REPO: A string constant indicating the GitHub repository link.
-- REPO_RELEASE: A string constant for the latest release API endpoint of the repository.
-- REPO_COMMIT: A string constant for the master commit API endpoint of the repository.
-- EXTENSION: The default file extension used in templates.
-- STR_EMPTY: A constant representing an empty string.
-- STR_SLASH: A constant for the slash character.
-- STR_UNDER_CONSTR: A string constant indicating "under construction" status.
-- STR_WIP: A string constant indicating "work in progress" status.
+- ROOT: Base namespace for application routing.
+- REPO: URL of the application repository.
+- REPO_RELEASE: URL for fetching the latest release details of the application.
+- REPO_COMMIT: URL for fetching the latest commit details.
+- EXTENSION: Default file extension used for templates.
 
-Structured dictionaries (instances of AttrDict):
-- KEY: Contains attribute keys for path, ID, template, navigation, title, additional
-  info, hints, and name.
-- INDEX: Metadata for the index page, including path, template, navigation title, and
-  other information.
-- CAMS: Metadata for the live streams page with warnings about single access use.
-- PRIVAT: Metadata for the privacy/legal notice page.
-- POWER: Metadata for the power status page.
-- SRVCS: Metadata for the services page, describing system services.
-- MADE: Metadata for the "made in and for 3D" page, including its title, description,
-  and status as a work in progress.
-- STATUS: Metadata for a generic status page.
+String Constants:
+- STR_EMPTY: Represents an empty string.
+- STR_SLASH: Represents a forward slash.
+- STR_UNDER_CONSTR: Placeholder text indicating something under construction.
+- STR_WIP: Placeholder text indicating work in progress.
 
-NAVI:
-- A list of navigation elements, detailing the order, names, endpoints, IDs, and
-  truncated titles for various sections in the application.
+Key Definitions:
+- KEY: Attribute dictionary defining standard keys used across configurations.
+
+Navigation and Page Data:
+- INDEX: Configuration for the index page.
+- CAMS: Configuration for the live streams page.
+- PRIVAT: Configuration for the privacy page.
+- POWER: Configuration for the power status page.
+- SRVCS: Configuration for the systemd services page.
+- MADE: Configuration for the impressions page.
+- STATUS: Basic configuration for a status endpoint.
+
+Navigation Elements:
+- N_IDX, N_PWR, N_LVE, N_SRV, N_MDE: Dictionaries defining navigation element
+  metadata.
+- NAVI: Ordered list of navigation elements.
 """
 
 

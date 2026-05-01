@@ -1,3 +1,14 @@
+"""
+A module for authenticating HTTP requests and sending messages using Telegram.
+
+This module handles user authentication through HTTP basic authentication and
+provides functionality for integrating with the Telegram API to send messages.
+It uses hashed passwords for secure authentication.
+
+It relies on external secrets for sensitive information such as Telegram token,
+chat ID, and basic authentication credentials, which are imported from a
+separate secure file.
+"""
 import telepot
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
