@@ -46,7 +46,7 @@ def __send_alert(message: str):
         sys.stderr(f"Telegram error: {e}")
 
 
-def __get_pro_state(service, name):
+def __get_property(service, name):
     return subprocess.run(['systemctl', name, service],
                           capture_output=True, text=True).stdout.strip()
 
@@ -75,9 +75,19 @@ def restart(service: str):
     control_service(ACTIONS[2], service)
 
 
-def get_info(service):
-    state = __get_pro_state(service, "is-active")
-    enabled = __get_pro_state(service, "is-enabled")
+def get_service_status(service):
+    result = "unknown", "unknown"
+    try:
+        state = __get_property(service, "is-active")
+        enabled = __get_property(service, "is-enabled")
+        result = state, enabled
+    except subprocess.CalledProcessError:
+        pass
+    return result
+
+
+def get_service_info(service):
+    state, enabled = get_service_status(service)
     des = subprocess.run(
         ['systemctl', "show", service, "--property=Description"],
         capture_output=True, text=True).stdout.strip()
@@ -89,7 +99,7 @@ def ensure_running(service):
     sleep_time = 3
 
     def is_active():
-        return get_info(service)["status"] == STR_ACTIVE
+        return get_service_info(service)["status"] == STR_ACTIVE
 
     # Service is running → nothing to do
     if is_active():
@@ -100,7 +110,7 @@ def ensure_running(service):
         f"⚠️ Service '{service}' is not active. Attempting recovery...")
 
     # If enabled → restart
-    if get_info(service)["enabled"] == "enabled":
+    if get_service_info(service)["enabled"] == "enabled":
         restart(service)
         sleep(sleep_time)
         if is_active():
@@ -113,7 +123,7 @@ def ensure_running(service):
 
     # If disabled → enable + start
     enable(service)
-    if get_info(service)["enabled"] == "enabled":
+    if get_service_info(service)["enabled"] == "enabled":
         start(service)
         sleep(sleep_time)
         if is_active():
