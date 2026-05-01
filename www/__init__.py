@@ -78,7 +78,7 @@ INDEX = AttrDict({KEY.path: STR_SLASH,
                   KEY.id: "index",
                   KEY.template: f"index{EXTENSION}",
                   KEY.navi: "start",
-                  KEY.title: "a dead cow, a kobra and four W",
+                  KEY.title: "a dead cow and her Kobra and a few 'W's",
                   KEY.nfo: STR_EMPTY,
                   KEY.hint: STR_EMPTY
                   })
@@ -144,4 +144,4 @@ N_MDE = {KEY.name: MADE.navi, KEY.ep: f"{ROOT}.{MADE.id}", KEY.id: MADE.id,
          KEY.title: f"{MADE.title[:17]}..."}
 
 # navigation elements order
-NAVI = [N_IDX, N_MDE, N_SRV, N_PWR]
+NAVI = [N_IDX, N_MDE, N_LVE, N_SRV, N_PWR]
