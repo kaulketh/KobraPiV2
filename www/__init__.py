@@ -93,14 +93,14 @@ CAMS = AttrDict({KEY.path: f"{STR_SLASH}cams",
                  KEY.navi: "live",
                  KEY.title: "live streams",
                  KEY.nfo: "Turned off!",
-                 KEY.hint: "Please make sure that these streams "
-                           "have only been accessed ONCE!"
+                 KEY.hint: STR_EMPTY  # "Please make sure that these streams "
+                 # "have only been accessed ONCE!"
                  })
 
 PRIVAT = AttrDict({KEY.path: f"{STR_SLASH}privacy",
                    KEY.id: "privacy",
                    KEY.template: f"privacy{EXTENSION}",
-                   KEY.navi: STR_EMPTY,  # "imprint",
+                   KEY.navi: "imprint",
                    KEY.title: STR_EMPTY,  # "legal notice & privacy policy",
                    KEY.nfo: STR_EMPTY,
                    KEY.hint: STR_EMPTY
@@ -137,15 +137,17 @@ STATUS = AttrDict({KEY.path: f"{STR_SLASH}status"})
 
 # navigation elements
 N_IDX = {KEY.name: INDEX.navi, KEY.ep: f"{ROOT}.{INDEX.id}", KEY.id: INDEX.id,
-         KEY.title: f"{INDEX.title[:17]}..."}
+         KEY.title: INDEX.title}
 N_PWR = {KEY.name: POWER.navi, KEY.ep: f"{ROOT}.{POWER.id}", KEY.id: POWER.id,
-         KEY.title: f"{POWER.title[:17]}..."}
+         KEY.title: POWER.title}
 N_LVE = {KEY.name: CAMS.navi, KEY.ep: f"{ROOT}.{CAMS.id}", KEY.id: CAMS.id,
-         KEY.title: f"{CAMS.title[:17]}..."}
+         KEY.title: CAMS.title}
 N_SRV = {KEY.name: SRVCS.navi, KEY.ep: f"{ROOT}.{SRVCS.id}", KEY.id: SRVCS.id,
-         KEY.title: f"{SRVCS.title[:17]}..."}
+         KEY.title: SRVCS.title}
 N_MDE = {KEY.name: MADE.navi, KEY.ep: f"{ROOT}.{MADE.id}", KEY.id: MADE.id,
-         KEY.title: f"{MADE.title[:17]}..."}
+         KEY.title: MADE.title}
+N_IMP = {KEY.name: PRIVAT.navi, KEY.ep: f"{ROOT}.{PRIVAT.id}",
+         KEY.id: PRIVAT.id, KEY.title: PRIVAT.title}
 
 # navigation elements order
-NAVI = [N_IDX, N_MDE, N_LVE, N_SRV, N_PWR]
+NAVI = [N_IDX, N_MDE, N_LVE, N_SRV, N_PWR, N_IMP]
