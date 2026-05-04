@@ -13,6 +13,7 @@ Classes and Functions:
 - toggle_light_only: Toggles only the light state.
 - set_all: Toggles both printer and light states based on a desired state.
 """
+import os
 import sys
 import threading
 import time
@@ -20,7 +21,14 @@ import time
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
+# add a parent directory (..) to sys.path to avoid possible import problems
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import bot
+import auth
+
 # Main setup
+kobra_bot = auth.KOBRA_BOT
+chat_id = auth.CHAT_ID
 printer_state = False
 light_state = False
 printer_known = False
@@ -116,12 +124,20 @@ def waiting_animation():
 # ---------------- ACTIONS ----------------
 def toggle_light_only():
     client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
+    threading.Thread(target=delayed_bot_update, daemon=True).start()
 
 
 def set_all(on: bool):
     cmd = "ON" if on else "OFF"
     client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", cmd)
     client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", cmd)
+    threading.Thread(target=delayed_bot_update, daemon=True).start()
+
+
+def delayed_bot_update():
+    sys.stdout.write(f"Consider changes - bot update required\n")
+    time.sleep(1.5 * LONG_PRESS)
+    bot.state_update(chat_id)
 
 
 # ---------------- START ----------------
