@@ -53,6 +53,7 @@ light_state = False
 printer_known = False
 light_known = False
 stop_event = threading.Event()
+long_press_triggered = False
 press_time = 0
 LONG_PRESS = 1.5
 
@@ -66,8 +67,9 @@ GPIO.output(LED_PIN, GPIO.LOW)
 
 # MQTT Setup
 BROKER = "localhost"
-PRINTER_TOPIC = "printer"
-LIGHT_TOPIC = "light"
+PRINTER_TOPIC = "printer_power"
+LIGHT_TOPIC = "enclosure_light"
+POWER_SUFFIX = "POWER1"
 PORT = 1883
 KEEP_ALIVE = 60
 RECONNECT_DELAY = 5
@@ -80,12 +82,12 @@ def on_connect(client, userdata, flags, reason_code, props):
     _ = userdata, flags, props  # unused
     sys.stdout.write(f"MQTT connected: {reason_code}\n")
 
-    client.subscribe(f"stat/{PRINTER_TOPIC}/POWER")
-    client.subscribe(f"stat/{LIGHT_TOPIC}/POWER")
+    client.subscribe(f"stat/{PRINTER_TOPIC}/{POWER_SUFFIX}")
+    client.subscribe(f"stat/{LIGHT_TOPIC}/{POWER_SUFFIX}")
 
     # Initial State (fallback if no retained)
-    client.publish(f"cmnd/{PRINTER_TOPIC}/POWER", "")
-    client.publish(f"cmnd/{LIGHT_TOPIC}/POWER", "")
+    client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", "")
+    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "")
 
 
 def on_disconnect(client, userdata, reason_code, props):
@@ -106,14 +108,16 @@ def on_message(client, userdata, msg):
 
     payload = msg.payload.decode()
 
-    if msg.topic == f"stat/{PRINTER_TOPIC}/POWER":
+    if msg.topic == f"stat/{PRINTER_TOPIC}/{POWER_SUFFIX}":
         printer_state = (payload == "ON")
         printer_known = True
         update_led()
 
-    elif msg.topic == f"stat/{LIGHT_TOPIC}/POWER":
+    elif msg.topic == f"stat/{LIGHT_TOPIC}/{POWER_SUFFIX}":
         light_state = (payload == "ON")
         light_known = True
+
+    sys.stdout.write(f"{msg.topic} -> {payload}\n")
 
 
 client.on_connect = on_connect
@@ -142,12 +146,18 @@ def waiting_animation():
 # ---------------- ACTIONS ----------------
 
 def toggle_printer_and_light():
-    client.publish(f"cmnd/{PRINTER_TOPIC}/POWER", "TOGGLE")
-    client.publish(f"cmnd/{LIGHT_TOPIC}/POWER", "TOGGLE")
+    client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
+    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
 
 
 def toggle_light_only():
-    client.publish(f"cmnd/{LIGHT_TOPIC}/POWER", "TOGGLE")
+    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
+
+
+def set_all(on: bool):
+    cmd = "ON" if on else "OFF"
+    client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", cmd)
+    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", cmd)
 
 
 # ---------------- START ----------------
@@ -160,23 +170,32 @@ blink_thread = threading.Thread(target=waiting_animation, daemon=True)
 blink_thread.start()
 
 # ---------------- MAIN LOOP ----------------
-
 try:
     while True:
         if GPIO.input(BUTTON_PIN) == GPIO.LOW:
             press_time = time.time()
+            long_press_triggered = False
 
             while GPIO.input(BUTTON_PIN) == GPIO.LOW:
+                duration = time.time() - press_time
+
+                if duration >= LONG_PRESS and not long_press_triggered:
+                    if not printer_known:
+                        sys.stdout.write(
+                            "Printer state unknown → ignore long press\n")
+                        long_press_triggered = True
+                        break  # option: break while-loop
+                    sys.stdout.write("Long press → All (state based)\n")
+                    set_all(not printer_state)
+                    long_press_triggered = True
+
                 time.sleep(0.01)
 
-            duration = time.time() - press_time
-            if duration >= LONG_PRESS:
-                sys.stdout.write("Long press → All\n")
-                toggle_printer_and_light()
-            else:
+            # only if no long press → Short Press
+            if not long_press_triggered:
                 sys.stdout.write("Short press → Light\n")
                 toggle_light_only()
-            time.sleep(0.3)  # debounce
+            time.sleep(0.3)  # debounce!
         time.sleep(0.05)
 
 except KeyboardInterrupt:
