@@ -1,45 +1,17 @@
 """
-This module provides functionality for controlling a printer and light
-via MQTT and GPIO on a Raspberry Pi. It manages button interactions,
-LED status updates, and MQTT communication for toggling and monitoring
-device states. The program handles events such as short and long button
-presses to perform specific actions, such as toggling the printer and light.
+This module provides functionality to manage a printer and enclosure light system using
+an MQTT-based communication protocol and GPIO interactions on a Raspberry Pi. It allows
+users to control printer and light power states with a physical button and visualize
+printer status through an LED.
 
-Classes and functions handle MQTT connection, message processing for
-device states, LED control for visual indication, and managing user
-interaction through a physical button.
-
-Attributes:
-    BUTTON_PIN (int): The GPIO pin number connected to the physical button.
-    LED_PIN (int): The GPIO pin number connected to the LED.
-    BROKER (str): The address of the MQTT broker.
-    PRINTER_TOPIC (str): The MQTT topic for printer state communication.
-    LIGHT_TOPIC (str): The MQTT topic for light state communication.
-    PORT (int): The port number for MQTT connection.
-    KEEP_ALIVE (int): The keepalive interval for the MQTT connection.
-    RECONNECT_DELAY (int): The delay (in seconds) before attempting MQTT reconnection.
-
-Functions:
-    on_connect(client, userdata, flags, reason_code, props):
-        Handles the MQTT connection event and subscribes to relevant topics.
-
-    on_disconnect(client, userdata, reason_code, props):
-        Handles the MQTT disconnection event and implements automatic reconnection.
-
-    on_message(client, userdata, msg):
-        Handles incoming MQTT messages to update the state of printer and light.
-
-    update_led():
-        Updates the LED state based on the printer state.
-
-    waiting_animation():
-        Performs a blinking animation on the LED until the printer state is known.
-
-    toggle_printer_and_light():
-        Sends MQTT commands to toggle both printer and light states.
-
-    toggle_light_only():
-        Sends an MQTT command to toggle only the light state.
+Classes and Functions:
+- on_connect: Handles MQTT connection event.
+- on_disconnect: Handles MQTT disconnection and retries connecting.
+- on_message: Handles MQTT message reception and updates states.
+- update_led: Updates LED state based on printer state.
+- waiting_animation: Provides a flashing animation while printer state is unknown.
+- toggle_light_only: Toggles only the light state.
+- set_all: Toggles both printer and light states based on a desired state.
 """
 import sys
 import threading
@@ -48,6 +20,7 @@ import time
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
+# Main setup
 printer_state = False
 light_state = False
 printer_known = False
@@ -55,7 +28,7 @@ light_known = False
 stop_event = threading.Event()
 long_press_triggered = False
 press_time = 0
-LONG_PRESS = 1.5
+LONG_PRESS = 2
 
 # GPIO Setup
 BUTTON_PIN = 17
@@ -77,7 +50,6 @@ client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 
 
 # ---------------- MQTT ----------------
-
 def on_connect(client, userdata, flags, reason_code, props):
     _ = userdata, flags, props  # unused
     sys.stdout.write(f"MQTT connected: {reason_code}\n")
@@ -117,7 +89,7 @@ def on_message(client, userdata, msg):
         light_state = (payload == "ON")
         light_known = True
 
-    sys.stdout.write(f"{msg.topic} -> {payload}\n")
+    sys.stdout.write(f"{msg.topic} = {payload}\n")
 
 
 client.on_connect = on_connect
@@ -126,7 +98,6 @@ client.on_disconnect = on_disconnect
 
 
 # ---------------- LED ----------------
-
 def update_led():
     if not printer_known:
         return
@@ -135,7 +106,6 @@ def update_led():
 
 def waiting_animation():
     """Flashes until a status is known"""
-    sys.stdout.write("Flash light until printer status is known\n")
     while not printer_known and not stop_event.is_set():
         GPIO.output(LED_PIN, GPIO.HIGH)
         time.sleep(0.2)
@@ -144,12 +114,6 @@ def waiting_animation():
 
 
 # ---------------- ACTIONS ----------------
-
-def toggle_printer_and_light():
-    client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
-    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
-
-
 def toggle_light_only():
     client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
 
@@ -161,11 +125,8 @@ def set_all(on: bool):
 
 
 # ---------------- START ----------------
-
 client.connect(BROKER, PORT, KEEP_ALIVE)
 client.loop_start()
-
-# Start background standby flashing
 blink_thread = threading.Thread(target=waiting_animation, daemon=True)
 blink_thread.start()
 
@@ -188,10 +149,9 @@ try:
                     sys.stdout.write("Long press → All (state based)\n")
                     set_all(not printer_state)
                     long_press_triggered = True
-
                 time.sleep(0.01)
 
-            # only if no long press → Short Press
+            # only if no long press → short Press
             if not long_press_triggered:
                 sys.stdout.write("Short press → Light\n")
                 toggle_light_only()
@@ -201,6 +161,5 @@ try:
 except KeyboardInterrupt:
     stop_event.set()
     blink_thread.join(timeout=1)
-
     client.loop_stop()
     GPIO.cleanup()
