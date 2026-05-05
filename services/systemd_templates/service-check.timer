@@ -1,0 +1,10 @@
+[Unit]
+Description=KobraPiV2 - run service-check every 10 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=10min
+Unit=service-check.service
+
+[Install]
+WantedBy=timers.target

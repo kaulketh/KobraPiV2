@@ -1,0 +1,14 @@
+[Unit]
+Description=Printer Button MQTT Control
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python /home/kaulketh/newKobraPi/devices/button_mqtt.py
+WorkingDirectory=/home/kaulketh/newKobraPi
+Restart=always
+
+# wichtig für GPIO + MQTT Stabilität
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

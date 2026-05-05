@@ -1,0 +1,10 @@
+[Unit]
+ Description=KobraPiV2 fan control service
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/usr/bin/python /home/kaulketh/newKobraPi/services/pi-fan-control/main.py
+
+ [Install]
+ WantedBy=multi-user.target

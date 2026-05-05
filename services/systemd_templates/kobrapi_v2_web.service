@@ -1,0 +1,12 @@
+[Unit]
+Description=kobraPiV2 Web UI
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/kaulketh/newKobraPi
+ExecStart=gunicorn -c /home/kaulketh/newKobraPi/gunicorn_config.py app:app &
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

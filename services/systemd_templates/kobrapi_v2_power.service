@@ -1,0 +1,11 @@
+[Unit]
+ Description=KobraPiV2 power socket control service
+ After=multi-user.target
+
+[Service]
+ Type=idle
+ ExecStart=/usr/bin/python /home/kaulketh/newKobraPi/services/power-control/moncon.py
+ Restart=always
+
+[Install]
+ WantedBy=multi-user.target

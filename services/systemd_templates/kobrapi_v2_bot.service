@@ -1,0 +1,13 @@
+[Unit]
+Description=KobraPiV2 Telegram bot
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/kaulketh/newKobraPi/bot
+ExecStart=/usr/bin/python /home/kaulketh/newKobraPi/bot/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
