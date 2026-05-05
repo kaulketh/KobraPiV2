@@ -1,0 +1,6 @@
+[Unit]
+Description=KobraPiV2 - check and ensure a systemd service is running
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python /home/kaulketh/newKobraPi/services/service_check.py
