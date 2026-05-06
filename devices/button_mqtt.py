@@ -137,7 +137,7 @@ def set_all(on: bool):
 def delayed_bot_update():
     sys.stdout.write(f"Consider changes - bot update required\n")
     time.sleep(1.5 * LONG_PRESS)
-    bot.state_update(chat_id)
+    bot.state_update(chat_id, bot.EXT_TXT)
 
 
 # ---------------- START ----------------

@@ -24,6 +24,7 @@ from flask import Flask, jsonify, Blueprint, render_template, redirect, \
     url_for
 from flask_cors import CORS
 
+import bot
 from auth import systemd, AUTH, CHAT_ID, KOBRA_BOT
 from devices import sockets, TASMOTA_SOCKETS, cameras, setup_cameras, \
     fetch_state, fetch_socket_states, fetch_power
@@ -35,7 +36,7 @@ from www import INDEX, MADE, CAMS, SRVCS, \
 
 # Flask configuration
 APPLICATION_ROOT = f"{STR_SLASH}{ROOT}"
-app = Flask("Kobra2+Control",
+app = Flask("KobraXControl",
             static_url_path=APPLICATION_ROOT,
             static_folder='www/static',
             template_folder='www/templates')
@@ -217,6 +218,7 @@ def control(action, service):
         control_service(action, service)
         url = f"{ROOT}.{SRVCS.id}" if service != systemd[
             0] else f"{ROOT}.{INDEX.id}"
+        bot.state_update(CHAT_ID, bot.EXT_TXT)
         return redirect(url_for(url))
     return None
 
@@ -224,6 +226,7 @@ def control(action, service):
 @kobra_bp.route(f"{STR_SLASH}toggle/<device_id>", methods=["POST"])
 @AUTH.login_required
 def toggle(device_id):
+    bot.state_update(CHAT_ID, bot.EXT_TXT)
     if device_id not in TASMOTA_SOCKETS:
         return jsonify({"error": "unknown device"}), 404
 

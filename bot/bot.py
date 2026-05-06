@@ -43,6 +43,7 @@ VIEW_NAME = "[3D print area] "
 STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
 POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
 POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
+EXT_TXT = "External operation detected, update required."
 cams = devices.ESP32_CAMERAS
 socks = devices.TASMOTA_SOCKETS
 srvcs = auth.systemd
@@ -192,10 +193,10 @@ def admin(ci):
     return str(ci) == chat_id
 
 
-def state_update(cid):
+def state_update(cid, txt=None):
     if admin(cid):
-        # headline = "*Status update*\n"
-        # kobra_bot.sendMessage(cid, headline, parse_mode="Markdown")
+        if txt:
+            kobra_bot.sendMessage(cid, txt, parse_mode="Markdown")
         s_txt, s_mrkp = __service_keyboard()
         p_txt, p_mrkp = __power_keyboard()
         kobra_bot.sendMessage(cid, s_txt, reply_markup=s_mrkp,
