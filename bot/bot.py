@@ -34,21 +34,9 @@ import services
 
 kobra_bot = auth.KOBRA_BOT
 chat_id = auth.CHAT_ID
-
-HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
-HEARTBEAT_ENABLED = True
-
-BOT_NAME = "[KobraPiV2] "
-VIEW_NAME = "[3D print area] "
-STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
-POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
-POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
-EXT_TXT = "External operation detected, update required."
 cams = devices.ESP32_CAMERAS
 socks = devices.TASMOTA_SOCKETS
 srvcs = auth.systemd
-
-global cams_powered
 
 icon_na = "\U000026AB"  # black
 icon_off = "\U000026AA"  # heavy white
@@ -58,6 +46,18 @@ icon_active = "\U0001F7E2"  # green
 emoticon_confused = "\U0001F615"
 emoticon_rolling_eyes = "\U0001F644"
 emoticon_worried = "\U0001F61F"
+emoticon_attention = "\u261D\uFE0F"
+
+HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
+HEARTBEAT_ENABLED = True
+BOT_NAME = "[KobraPiV2] "
+VIEW_NAME = "[3D print area] "
+STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
+POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
+POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
+EXT_TXT = f"{emoticon_attention}\nExternal process via web UI or locally detected.\nStatus update required."
+
+global cams_powered
 
 
 def __service_keyboard():

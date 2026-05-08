@@ -214,19 +214,40 @@ def services():
 @kobra_bp.route(f"{SRVCS.path}/<action>/<service>", methods=['POST'])
 @AUTH.login_required
 def control(action, service):
-    if service in systemd and action in ACTIONS:
+    if service not in systemd or action not in ACTIONS:
+        return None
+
+    try:
         control_service(action, service)
-        url = f"{ROOT}.{SRVCS.id}" if service != systemd[
-            0] else f"{ROOT}.{INDEX.id}"
         bot.state_update(CHAT_ID, bot.EXT_TXT)
+        url = (
+            f"{ROOT}.{SRVCS.id}"
+            if service != systemd[0]
+            else f"{ROOT}.{INDEX.id}"
+        )
         return redirect(url_for(url))
-    return None
+    except Exception as e:
+        sys.stderr.write(
+            f"Error controlling service {service}: {e}\n"
+        )
+        return "Service control failed", 500
 
 
 @kobra_bp.route(f"{STR_SLASH}toggle/<device_id>", methods=["POST"])
 @AUTH.login_required
 def toggle(device_id):
-    bot.state_update(CHAT_ID, bot.EXT_TXT)
+    def wait_for_state_change(device_id,
+                              old_state,
+                              timeout=10,
+                              interval=0.5):
+        start = time.time()
+        while time.time() - start < timeout:
+            current = fetch_state(device_id)
+            if current != old_state:
+                return current
+            time.sleep(interval)
+        return None
+
     if device_id not in TASMOTA_SOCKETS:
         return jsonify({"error": "unknown device"}), 404
 
@@ -235,21 +256,32 @@ def toggle(device_id):
         return jsonify({"error": "device not reachable"}), 500
 
     new_state = "OFF" if current_state == "on" else "ON"
-
     try:
-        response = requests.get(TASMOTA_SOCKETS[device_id]["url"],
-                                params={"cmnd": f"Power1 {new_state}"})
+        response = requests.get(
+            TASMOTA_SOCKETS[device_id]["url"],
+            params={"cmnd": f"Power1 {new_state}"},
+            timeout=5
+        )
         response.raise_for_status()
-        return jsonify({"state": "on" if new_state == "ON" else "off"})
+        changed_state = wait_for_state_change(device_id, current_state)
+        if not changed_state:
+            return jsonify({"error": "device did not change state"}), 500
+        bot.state_update(CHAT_ID, bot.EXT_TXT)
+        return jsonify({"state": changed_state})
+
     except requests.RequestException as e:
-        sys.stderr.write(f"Error during toggling device {device_id}: {e}\n")
+        sys.stderr.write(
+            f"Error during toggling device {device_id}: {e}\n"
+        )
         return jsonify({"error": "Toggling failed"}), 500
     finally:
         try:
             if current_state == "off" and device_id == CAMS.id:
                 setup_cameras()
         except requests.exceptions.ConnectionError as e:
-            sys.stderr.write(f"Error during update camera devices: {e}\n")
+            sys.stderr.write(
+                f"Error during update camera devices: {e}\n"
+            )
 
 
 # repeating status request
@@ -306,6 +338,7 @@ if os.getpid() % workers == 0:
                           f"https://kauli.hopto.org/kobra\n"
                           f"{workers} "
                           f"workers are doing the job.")
+    bot.state_update(CHAT_ID, bot.EXT_TXT)
 
 if __name__ == "__main__":
     app.run(debug=False, host=app_host, threaded=True)
