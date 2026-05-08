@@ -34,20 +34,9 @@ import services
 
 kobra_bot = auth.KOBRA_BOT
 chat_id = auth.CHAT_ID
-
-HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
-HEARTBEAT_ENABLED = True
-
-BOT_NAME = "[Printer control] "
-BOT_NAME_VIEW = "[3D print area] "
-STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
-POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
-POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
 cams = devices.ESP32_CAMERAS
 socks = devices.TASMOTA_SOCKETS
 srvcs = auth.systemd
-
-global cams_powered
 
 icon_na = "\U000026AB"  # black
 icon_off = "\U000026AA"  # heavy white
@@ -57,10 +46,22 @@ icon_active = "\U0001F7E2"  # green
 emoticon_confused = "\U0001F615"
 emoticon_rolling_eyes = "\U0001F644"
 emoticon_worried = "\U0001F61F"
+emoticon_attention = "\u261D\uFE0F"
+
+HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
+HEARTBEAT_ENABLED = True
+BOT_NAME = "[KobraPiV2] "
+VIEW_NAME = "[3D print area] "
+STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
+POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
+POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
+EXT_TXT = f"{emoticon_attention}\nExternal process via web UI or locally detected.\nStatus update required."
+
+global cams_powered
 
 
 def __service_keyboard():
-    status_text = "_Systemd services_\n"
+    status_text = "*systemd services*\n"
     btns = []
     log = ""
     for s in srvcs:
@@ -76,7 +77,8 @@ def __service_keyboard():
         log += f"{s}={state}\n"
         btns.append(InlineKeyboardButton(text=f"{text}",
                                          callback_data=f"service:{s}"))
-    mrkup = InlineKeyboardMarkup(inline_keyboard=[btns])
+    mrkup = InlineKeyboardMarkup(
+        inline_keyboard=[btns[:2], btns[2:4], btns[4:]])
     sys.stdout.write(log)
     return status_text, mrkup
 
@@ -86,9 +88,10 @@ def __power_keyboard():
     cams_powered = False
     tasmota_btns = []
     snapshot_btn = [
-        InlineKeyboardButton(text="Print area", callback_data="snapshots")]
+        InlineKeyboardButton(text="Snapshots",
+                             callback_data="snapshots")]
 
-    status_text = f"_Consumption_\n"
+    status_text = f"*power consumption*\n"
     log = ""
     for key, data in socks.items():
         pwr = _get_pwr(data['url'])
@@ -139,19 +142,19 @@ def _take_snapshots(cid, loop_delay=1):
                 kobra_bot.sendPhoto(
                     cid,
                     photo=image_io,
-                    caption=f"{BOT_NAME_VIEW} "
+                    caption=f"{VIEW_NAME} "
                             f"{cams.get(cam).get('name')} view",
                     disable_notification=True)
             else:
                 kobra_bot.sendMessage(cid,
-                                      f"{BOT_NAME_VIEW}\n"
+                                      f"{VIEW_NAME}\n"
                                       f"Error when retrieving the image"
                                       f"({cams.get(cam).get('name')})")
         except Exception as e:
             sys.stderr.write(f"{e}\n")
             kobra_bot.sendMessage(
                 cid,
-                f"{BOT_NAME_VIEW} "
+                f"{VIEW_NAME} "
                 f"couldn't take snapshot from "
                 f"{cams.get(cam).get('name').lower()}")
         finally:
@@ -190,14 +193,16 @@ def admin(ci):
     return str(ci) == chat_id
 
 
-def state_update(cid):
+def state_update(cid, txt=None):
     if admin(cid):
-        headline = "*Status update*\n"
-        kobra_bot.sendMessage(cid, headline, parse_mode="Markdown")
-        pt, pm = __power_keyboard()
-        st, sm = __service_keyboard()
-        kobra_bot.sendMessage(cid, st, reply_markup=sm, parse_mode="Markdown")
-        kobra_bot.sendMessage(cid, pt, reply_markup=pm, parse_mode="Markdown")
+        if txt:
+            kobra_bot.sendMessage(cid, txt, parse_mode="Markdown")
+        s_txt, s_mrkp = __service_keyboard()
+        p_txt, p_mrkp = __power_keyboard()
+        kobra_bot.sendMessage(cid, s_txt, reply_markup=s_mrkp,
+                              parse_mode="Markdown")
+        kobra_bot.sendMessage(cid, p_txt, reply_markup=p_mrkp,
+                              parse_mode="Markdown")
 
 
 def on_message(msg):
@@ -302,7 +307,7 @@ def main():
             if HEARTBEAT_ENABLED:
                 current_time = time.time()
                 if current_time - last_heartbeat > HEARTBEAT_INTERVAL:
-                    msg = "💓 Bot is alive and running."
+                    msg = "Bot is alive and running."
                     kobra_bot.sendMessage(chat_id=chat_id,
                                           text=f"{BOT_NAME}\n{msg}")
                     last_heartbeat = current_time
@@ -310,7 +315,7 @@ def main():
             # Normal delay between polls
             time.sleep(1)  # avoid API overload
 
-    msg = "Bot is running..."
+    msg = "Bot is working."
     text = f"{BOT_NAME}\n{msg}"
     kobra_bot.sendMessage(chat_id=chat_id, text=text)
     sys.stdout.write(f"{text}\n")

@@ -13,7 +13,7 @@ import devices
 
 TASMOTA_SOCKETS = devices.TASMOTA_SOCKETS
 POWER_THRESHOLD = 15  # Threshold in Watts
-DURATION_BELOW_THRESHOLD = 300  # Time in seconds before monitoring
+DURATION_BELOW_THRESHOLD = 600  # Time in seconds before monitoring
 DURATION_MONITORING_THRESHOLD = 60  # Time in seconds before switching off
 PAUSE_CHECK = 5
 

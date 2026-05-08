@@ -5,10 +5,10 @@
             <table>
                 {% for service, info in service_statuses.items() %}
                     <tr class="border-bottom">
-                        <td>{{ service[:-8] }}</td>
+                        <td>{{ service[11:-8] }}</td>
                         <td>
                             <span class="{{ 'active_service' if info.enabled == 'enabled' else 'inactive_service' }}">{{ info.enabled }}</span>
-                            <span style="font-size: 0.8rem">and</span>
+                            <span style="font-size: 0.8rem">&</span>
                             <span class="{{ 'active_service' if info.status == 'active' else 'inactive_service' }}">{{ info.status }}</span>
                         </td>
                         <td>
