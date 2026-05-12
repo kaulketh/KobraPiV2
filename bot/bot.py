@@ -21,12 +21,11 @@ import os
 import sys
 import time
 import traceback
+from itertools import islice
 
 import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-
-from app import STATE_CHANGE_TIMEOUT
 
 # add a parent directory (..) to sys.path to avoid possible import problems
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -174,7 +173,7 @@ def _toggle_tasmota(cid, socket_key, delay=3):
         time.sleep(delay)
 
 
-def _toggle_service(cid, service, delay=STATE_CHANGE_TIMEOUT):
+def _toggle_service(cid, service, delay=3):
     status = services.get_service_info(service)['status']
     sys.stdout.write(f"{service} is {status}\n")
     if admin(cid):
@@ -210,6 +209,36 @@ def state_update(cid, txt=None):
                               parse_mode="Markdown")
 
 
+def _power(cid, turn_on=True):
+    # First socket is main power supply, excluded from power control
+    for key, data in islice(socks.items(), 1, None):
+        pwr = _get_pwr(data['url'])
+        if pwr == "N/A":
+            kobra_bot.sendMessage(cid, f"Power unknown for '{key.title()}'")
+            continue
+
+        is_on = pwr > 0
+        if turn_on:
+            if is_on:
+                kobra_bot.sendMessage(cid, f"'{key.title()}' already on.")
+                continue
+            _toggle_tasmota(cid, key)
+            kobra_bot.sendMessage(cid, f"Powered on '{key.title()}'")
+        else:
+            if not is_on:
+                continue
+            _toggle_tasmota(cid, key)
+            kobra_bot.sendMessage(cid, f"'{key.title()}' powered off.")
+
+
+def power_on(cid):
+    _power(cid, True)
+
+
+def power_off(cid):
+    _power(cid, False)
+
+
 def on_message(msg):
     """Responds to incoming messages"""
     cid = msg["chat"]["id"]
@@ -219,12 +248,9 @@ def on_message(msg):
         if text in STATE_CMD:
             state_update(cid)
         elif text in POWER_ON_CMD:
-            # TODO: power on light, printer and cameras
-            kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
+            power_on(cid)
         elif text in POWER_OFF_CMD:
-            # TODO power off all but not main power supply
-            kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
-
+            power_off(cid)
         else:
             kobra_bot.sendMessage(cid, emoticon_rolling_eyes)
     else:
