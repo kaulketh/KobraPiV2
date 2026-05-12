@@ -1,3 +1,23 @@
+"""
+Monitors and controls the power consumption of devices based on thresholds
+and triggers actions such as turning off devices and sending notifications.
+
+This script uses Tasmota-compatible devices for monitoring and control, making
+HTTP requests to their respective URLs. Notifications and alerts are handled
+via Telegram.
+
+Attributes:
+    TASMOTA_SOCKETS: Dictionary containing Tasmota devices and their metadata.
+    POWER_THRESHOLD (int): Power threshold in Watts.
+    DURATION_BELOW_THRESHOLD (int): Duration in seconds before initiating monitoring
+        when power usage remains below the threshold.
+    DURATION_MONITORING_THRESHOLD (int): Duration in seconds for constant
+        monitoring checks.
+    PAUSE_CHECK (int): Time in seconds between consecutive checks.
+    TELEGRAM_TOKEN: Telegram bot token used for authentication.
+    CHAT_ID: Telegram chat ID where notifications will be sent.
+    BOT_NAME (str): Prefix for Telegram bot messages.
+"""
 import os
 import sys
 import time
