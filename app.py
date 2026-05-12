@@ -45,6 +45,8 @@ app.config["APPLICATION_ROOT"] = APPLICATION_ROOT
 CORS(app)
 kobra_bp = Blueprint(ROOT, __name__, url_prefix=APPLICATION_ROOT)
 images = os.listdir(os.path.join(app.static_folder, "images"))
+STATE_CHECK_INTERVAL = 1.5
+STATE_CHANGE_TIMEOUT = 10
 
 # set up a gallery
 global img_orientation
@@ -238,8 +240,8 @@ def control(action, service):
 def toggle(device_id):
     def wait_for_state_change(device_id,
                               old_state,
-                              timeout=10,
-                              interval=0.5):
+                              timeout=STATE_CHANGE_TIMEOUT,
+                              interval=STATE_CHECK_INTERVAL):
         start = time.time()
         while time.time() - start < timeout:
             current = fetch_state(device_id)

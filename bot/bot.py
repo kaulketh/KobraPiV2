@@ -26,6 +26,8 @@ import requests
 from PIL import Image
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
+from app import STATE_CHANGE_TIMEOUT
+
 # add a parent directory (..) to sys.path to avoid possible import problems
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import auth
@@ -52,10 +54,13 @@ HEARTBEAT_INTERVAL = 6 * 60 * 60  # 6 hours
 HEARTBEAT_ENABLED = True
 BOT_NAME = "[KobraPiV2] "
 VIEW_NAME = "[3D print area] "
-STATE_CMD = "start", "/start", "/status", "status", "/state", "state"
-POWER_ON_CMD = "on", "power on", "power_on", "start", "start power", "start power on"
-POWER_OFF_CMD = "off", "power off", "power_off", "stop", "stop power", "stop power off"
-EXT_TXT = f"{emoticon_attention}\nExternal process via web UI or locally detected.\nStatus update required."
+STATE_CMD = "start", "/start"
+POWER_ON_CMD = "on", "power on", "power_on", "/on"
+POWER_OFF_CMD = "off", "power off", "power_off", "/off"
+EXT_TXT = (f"{emoticon_attention}\n"
+           f"External process via web UI or locally detected.\n"
+           f"Status update required.\n"
+           f"You might have to do it manually (start)!")
 
 global cams_powered
 
@@ -169,7 +174,7 @@ def _toggle_tasmota(cid, socket_key, delay=3):
         time.sleep(delay)
 
 
-def _toggle_service(cid, service, delay=3):
+def _toggle_service(cid, service, delay=STATE_CHANGE_TIMEOUT):
     status = services.get_service_info(service)['status']
     sys.stdout.write(f"{service} is {status}\n")
     if admin(cid):
