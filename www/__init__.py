@@ -1,44 +1,10 @@
 """
-Module defining constants and utility structures for a web-based application.
-
-This module provides a set of constants and dictionaries used for defining
-navigation elements, templates, and other configurations in a structured
-manner. It includes utility structures, such as an attribute-enabled dictionary
-class, and establishes the configuration for various application components
-like pages and navigation.
-
-Classes:
-- AttrDict: A dictionary-like class that allows accessing keys as attributes.
-
-Constants:
-- ROOT: Base namespace for application routing.
-- REPO: URL of the application repository.
-- REPO_RELEASE: URL for fetching the latest release details of the application.
-- REPO_COMMIT: URL for fetching the latest commit details.
-- EXTENSION: Default file extension used for templates.
-
-String Constants:
-- STR_EMPTY: Represents an empty string.
-- STR_SLASH: Represents a forward slash.
-- STR_UNDER_CONSTR: Placeholder text indicating something under construction.
-- STR_WIP: Placeholder text indicating work in progress.
-
-Key Definitions:
-- KEY: Attribute dictionary defining standard keys used across configurations.
-
-Navigation and Page Data:
-- INDEX: Configuration for the index page.
-- CAMS: Configuration for the live streams page.
-- PRIVAT: Configuration for the privacy page.
-- POWER: Configuration for the power status page.
-- SRVCS: Configuration for the systemd services page.
-- MADE: Configuration for the impressions page.
-- STATUS: Basic configuration for a status endpoint.
-
-Navigation Elements:
-- N_IDX, N_PWR, N_LVE, N_SRV, N_MDE: Dictionaries defining navigation element
-  metadata.
-- NAVI: Ordered list of navigation elements.
+This module defines constants, attributes, and navigation elements for a
+web application, including keys, templates, paths, and titles used across
+the application. It provides a specialized dictionary class allowing
+attribute-style access to dictionary keys, as well as predefined
+navigation elements and their ordering for structuring a web-based
+system.
 """
 
 
