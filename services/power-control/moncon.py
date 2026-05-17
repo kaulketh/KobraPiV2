@@ -1,18 +1,60 @@
 """
-This module monitors the power consumption of devices and automatically turns
-off devices when power consumption remains below a defined threshold for a
-specified duration. Notifications about power consumption and device control
-actions are sent via a Telegram bot.
+This module monitors the power consumption of devices and automatically
+switches off specified devices if their power usage remains below a defined
+threshold for a specified duration. Notifications are sent via Telegram
+to update the status of power consumption and device control actions.
 
-Classes and functions in this module work together to track power usage,
-evaluate thresholds, and perform automated device control to optimize power
-usage.
+The monitoring process includes:
+1. Continuous observation of power usage.
+2. Monitoring precise intervals when power usage is within the threshold.
+3. Automated device switch-off after prolonged below-threshold consumption.
 
-Dependencies:
-- `requests`: For making HTTP requests to Tasmota devices.
-- `telepot`: For sending Telegram notifications.
-- `auth`: For retrieving Telegram bot token and chat ID.
-- `devices`: For accessing device configuration details.
+Imports:
+- os: Used for filesystem path manipulations.
+- sys: Used for adding directories to the Python path and writing to
+  standard streams.
+- time: Used for implementing time delays and measuring durations.
+- requests: Used for making HTTP requests to devices for data retrieval or action.
+- telepot: Used for sending Telegram messages.
+- auth: Custom module for handling authentication tokens.
+- devices: Custom module containing device configuration details.
+
+Attributes:
+TASMOTA_SOCKETS: dict
+    Stores configuration settings for the connected Tasmota devices.
+POWER_THRESHOLD: int
+    Power threshold in Watts.
+DURATION_BELOW_THRESHOLD: int
+    Time in seconds before precise interval monitoring begins.
+DURATION_MONITORING_THRESHOLD: int
+    Time in seconds for monitoring a constant value before triggering reactions.
+PAUSE_CHECK: int
+    Time in seconds between each monitoring cycle.
+TELEGRAM_TOKEN: str
+    Telegram bot token for authentication.
+CHAT_ID: str
+    Telegram chat ID for sending notifications.
+bot: telepot.Bot
+    An instance of the Telegram bot for sending messages.
+BOT_NAME: str
+    A prefix string for all messages sent by the bot.
+
+Functions:
+_get_power_usage(device_url: str) -> Optional[float]
+    Retrieves the current power consumption of the specified device in Watts.
+
+_turn_off_devices(devices: Optional[dict] = None) -> None
+    Turns off all specified devices by sending HTTP commands.
+
+monitor_and_control() -> None
+    Monitors the power consumption and controls devices based on threshold values.
+
+_send_telegram_message(message: str) -> None
+    Sends a message via Telegram to the configured chat ID.
+
+_monitor_value(get_value: float, duration: int) -> None
+    Monitors a value and reacts if it remains constant for the given duration
+    or decreases.
 """
 import os
 import sys
