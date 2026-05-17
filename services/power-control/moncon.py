@@ -1,15 +1,18 @@
 """
-This module monitors the power consumption of a printer through a Tasmota-powered
-socket. It automates the process of turning off connected devices when the power
-consumption remains below a certain threshold for a specified duration, sending
-status updates and alerts using Telegram.
+This module monitors the power consumption of devices and automatically turns
+off devices when power consumption remains below a defined threshold for a
+specified duration. Notifications about power consumption and device control
+actions are sent via a Telegram bot.
 
-Classes and functions:
-- monitor_and_control: Main monitoring loop for power consumption.
-- _get_power_usage: Retrieves the current power consumption from the Tasmota socket.
-- _turn_off_devices: Turns off specified devices based on consumption status.
-- _send_telegram_message: Sends a message via Telegram bot.
-- _monitor_value: Monitors a value and triggers actions based on thresholds.
+Classes and functions in this module work together to track power usage,
+evaluate thresholds, and perform automated device control to optimize power
+usage.
+
+Dependencies:
+- `requests`: For making HTTP requests to Tasmota devices.
+- `telepot`: For sending Telegram notifications.
+- `auth`: For retrieving Telegram bot token and chat ID.
+- `devices`: For accessing device configuration details.
 """
 import os
 import sys
@@ -23,9 +26,12 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import auth
 import devices
-import config
 
 TASMOTA_SOCKETS = devices.TASMOTA_SOCKETS
+POWER_THRESHOLD = 15  # Threshold in Watts
+DURATION_BELOW_THRESHOLD = 900  # Time in seconds before monitoring
+DURATION_MONITORING_THRESHOLD = 120  # Time in seconds before switching off
+PAUSE_CHECK = 5
 
 # Telegram configuration
 TELEGRAM_TOKEN = auth.telegram_token
@@ -40,8 +46,7 @@ def _get_power_usage(device_url=TASMOTA_SOCKETS.get("printer").get("url")):
         response.raise_for_status()
         data = response.json()
         power = data.get("StatusSNS", {}).get("ENERGY", {}).get("Power")
-        return float(
-            power) if power is not None else config.DURATION_BELOW_THRESHOLD
+        return float(power) if power is not None else DURATION_BELOW_THRESHOLD
     except requests.RequestException as e:
         sys.stderr.write(f"Error when retrieving the power consumption: {e}\n")
         return None
@@ -59,7 +64,7 @@ def _turn_off_devices(devices=None):
                        f"switched off.")
             sys.stdout.write(f"{message}\n")
             _send_telegram_message(message)
-            time.sleep(config.PAUSE_CHECK)
+            time.sleep(PAUSE_CHECK)
         except requests.RequestException as e:
             sys.stderr.write(f"Error during switch-off: {e}\n")
 
@@ -75,24 +80,24 @@ def monitor_and_control():
         else:
             str_current = f"Current power consumption: {power}W"
             sys.stdout.write(f"{str_current}\n")
-            if 0 < power <= config.POWER_THRESHOLD:
+            if 0 < power <= POWER_THRESHOLD:
                 # again in lower consumption range, reset possible
                 power_restored_reported = False
                 if below_threshold_start is None:
                     below_threshold_start = time.time()
                     _send_telegram_message(
                         f"Printer power consumption is less or equal than "
-                        f"{config.POWER_THRESHOLD} Watts, "
+                        f"{POWER_THRESHOLD} Watts, "
                         f"precise interval monitoring started."
                     )
                 elif (
                         time.time() - below_threshold_start >=
-                        config.DURATION_BELOW_THRESHOLD
+                        DURATION_BELOW_THRESHOLD
                 ):
                     _monitor_value()
                     _send_telegram_message(
                         f"Threshold value has been undercut for more than "
-                        f"{config.DURATION_BELOW_THRESHOLD // 60} minutes. "
+                        f"{DURATION_BELOW_THRESHOLD // 60} minutes. "
                         f"Devices will be switched off."
                     )
                     _turn_off_devices()
@@ -107,15 +112,15 @@ def monitor_and_control():
                 # Reset if consumption rises above the threshold value
                 below_threshold_start = None
         # Pause between checks
-        time.sleep(config.PAUSE_CHECK)
+        time.sleep(PAUSE_CHECK)
 
 
 def _send_telegram_message(message):
     bot.sendMessage(CHAT_ID, f"{BOT_NAME}\n{message}")
 
 
-def _monitor_value(get_value=config.POWER_THRESHOLD,
-                   duration=config.DURATION_MONITORING_THRESHOLD):
+def _monitor_value(get_value=POWER_THRESHOLD,
+                   duration=DURATION_MONITORING_THRESHOLD):
     """
     Monitors a value and triggers a reaction only if it remains constant 
     for 'duration' seconds or decreases.
