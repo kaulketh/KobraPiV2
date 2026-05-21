@@ -135,7 +135,7 @@ def monitor_and_control():
                     _monitor_value()
                     _send_telegram_message(
                         f"Threshold value has been undercut for more than "
-                        f"{(DURATION_BELOW_THRESHOLD + DURATION_MONITORING_THRESHOLD) // 60} minutes. "
+                        f"{int((DURATION_BELOW_THRESHOLD + DURATION_MONITORING_THRESHOLD) // 60)} minutes. "
                         f"Devices will be switched off now.")
                     _turn_off_devices()
                     # reset after switching off
@@ -165,7 +165,7 @@ def _monitor_value(get_value=POWER_THRESHOLD,
     start_time = time.time()
     _send_telegram_message(
         f"Monitor power if it remains constant "
-        f"for {duration} seconds or decreases.")
+        f"for {int(duration)} seconds or decreases.")
     while True:
         current_value = get_value
 
