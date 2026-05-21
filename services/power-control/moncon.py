@@ -109,8 +109,8 @@ def monitor_and_control():
                         below_threshold_start = time.time()
                         _send_telegram_message(
                             f"Printer power consumption is less or equal than "
-                            f"{POWER_THRESHOLD} Watts, "
-                            f"precise interval monitoring started.")
+                            f"{POWER_THRESHOLD} Watts.\n"
+                            f"Precise interval monitoring started.")
                     elif (
                             time.time() - below_threshold_start >=
                             DURATION_BELOW_THRESHOLD):

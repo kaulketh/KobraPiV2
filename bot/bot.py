@@ -227,6 +227,7 @@ def _power(cid, turn_on=True):
             kobra_bot.sendMessage(cid, f"Powered on '{key.title()}'")
         else:
             if not is_on:
+                kobra_bot.sendMessage(cid, f"'{key.title()}' not powered on!")
                 continue
             _toggle_tasmota(cid, key)
             kobra_bot.sendMessage(cid, f"'{key.title()}' powered off.")
