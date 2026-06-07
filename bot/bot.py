@@ -1,20 +1,21 @@
 """
-A system to manage 3D printer control and monitoring using a Telegram bot.
+A bot-based system to manage 3D printing area components and services.
 
-This module provides functionalities for controlling 3D printing hardware,
-monitoring connected devices, capturing snapshots from cameras, toggling
-device states (such as Tasmota sockets), and interacting with systemd services
-via a Telegram bot.
+This module provides the functionality to interact with system services,
+control power consumption, capture camera snapshots, and handle bot messages
+and callbacks related to the management of a 3D printing area.
 
-Dependencies:
-- requests
-- PIL (Pillow library)
-- telepot (for Telegram bot handling)
+Classes and functions in this module operate over different devices and services,
+using requests, Telegram Bot APIs, and system monitoring tools to provide real-time
+control and updates.
 
-The core features include responding to chat messages, handling button clicks
-for specific commands, and providing status updates about the connected devices.
-The settings and configurations for cameras, sockets, and services are imported
-from external modules.
+Functions:
+
+- on_message: Handles incoming messages to execute specific bot commands.
+- on_callback_query: Handles button press events for specific actions.
+- power_on: Turns on powered devices in the connected system.
+- power_off: Turns off powered devices in the connected system.
+- state_update: Provides a real-time update on service and power states.
 """
 import io
 import os
@@ -220,12 +221,15 @@ def _power(cid, turn_on=True):
         is_on = pwr > 0
         if turn_on:
             if is_on:
-                kobra_bot.sendMessage(cid, f"'{key.title()}' already on.")
+                kobra_bot.sendMessage(cid,
+                                      f"'{key.title()}' already switched on.")
                 continue
             _toggle_tasmota(cid, key)
-            kobra_bot.sendMessage(cid, f"Powered on '{key.title()}'")
+            kobra_bot.sendMessage(cid, f"'{key.title()}' powered on.")
         else:
             if not is_on:
+                kobra_bot.sendMessage(cid,
+                                      f"'{key.title()}' already switched off.")
                 continue
             _toggle_tasmota(cid, key)
             kobra_bot.sendMessage(cid, f"'{key.title()}' powered off.")

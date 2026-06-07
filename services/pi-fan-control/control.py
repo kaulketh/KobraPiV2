@@ -1,3 +1,22 @@
+"""
+Fan control module for managing the operation of a fan based on CPU temperature.
+
+This module utilizes GPIO pins on a Raspberry Pi to control a fan, turning it on
+or off depending on the temperature thresholds provided. It monitors the CPU
+temperature using both a system file and the vcgencmd command. It is designed to
+run continuously, toggling the fan's operation based on predefined temperature
+limits.
+
+Classes:
+    FanControl: Handles the initialization and operation of fan control based
+    on temperature readings.
+
+Notes:
+    - The GPIO pin number, temperature thresholds, and polling interval must
+      be provided when instantiating the FanControl class.
+    - This module is designed specifically for use with a Raspberry Pi.
+    - Ensure that RPi.GPIO is installed and configured correctly on the system.
+"""
 import os
 import sys
 import time

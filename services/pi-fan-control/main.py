@@ -1,3 +1,12 @@
+"""
+A module to initialize and manage fan control based on temperature thresholds.
+
+This script initializes fan control by configuring the fan pin, temperature
+thresholds, and polling interval. The control is implemented through the
+FanControl class which is imported from the control module. Configuration
+values are fetched from the config module. Errors during execution are logged
+to standard error with the traceback details.
+"""
 import sys
 import traceback
 

@@ -101,7 +101,7 @@ def ensure_running(service):
 
     # Service is NOT running → send alert
     __send_alert(
-        f"⚠️ Service '{service}' is not active. Attempting recovery...")
+        f"⚠️\nService '{service}' is not active.\nAttempting recovery...")
 
     # If enabled → restart
     if get_service_info(service)["enabled"] == "enabled":

@@ -1,15 +1,54 @@
 """
-This module provides the main Flask application for the "Kobra2+Control" system.
+A module that defines the main Flask application and its routes for
+managing devices, services, and a gallery of images. It includes logic
+for handling state changes, controlling services, and creating image
+thumbnails, among other functionalities.
 
-It configures the Flask application, sets up routes for handling both GET
-and POST requests, and establishes a gallery with thumbnail generation.
-The application facilitates interaction with IoT devices, service
-management, and status reporting. Additionally, it includes various
-utilities for image processing, system information retrieval, and device
-control.
+This application relies on multiple external libraries and configurations
+to manage devices and services, and to provide a UI for administration.
 
-Classes and functions not listed in this module docstring are private/internal
-and should not be directly accessed.
+Classes:
+    None
+
+Functions:
+    __correct_orientation(image_path: str) -> Image
+        Adjusts the orientation of an image based on its EXIF data.
+
+    __create_thumbnail(image_path: str, thumbnail_path: str, size: tuple[int, int] = (200, 150)) -> None
+        Creates a thumbnail for a given image after correcting its orientation.
+
+    __get_version() -> str
+        Retrieves the version of the application using repository release and commit info.
+
+    inject_context() -> dict
+        Provides global context variables for all templates in the application.
+
+    gallery_image(file: str) -> str
+        Custom Jinja2 filter to format gallery image names.
+
+    cams() -> Response
+        Handles GET requests to render the cameras page and fetch camera states.
+
+    index() -> Response
+        Handles GET requests to render the home/index page.
+
+    made() -> Response
+        Handles GET requests to render the "Made" page.
+
+    power() -> Response
+        Handles GET requests to render the power control page and fetch device states.
+
+    privacy() -> Response
+        Handles GET requests to render the privacy policy page.
+
+    services() -> Response
+        Handles GET requests to render the services page and fetch service statuses.
+
+    control(action: str, service: str) -> Response
+        Handles POST requests to control specific system services.
+
+    toggle(device_id: str) -> Response
+        Handles POST requests to toggle the power state of a device.
 """
 import os
 import platform
