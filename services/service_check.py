@@ -15,5 +15,5 @@ import auth
 import services
 
 if __name__ == '__main__':
-    for svc in auth.systemd:
+    for svc in auth.systemd[:-1]:
         services.ensure_running(svc)
