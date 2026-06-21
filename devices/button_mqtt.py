@@ -47,11 +47,11 @@ GPIO.setup(LED_PIN, GPIO.OUT)
 GPIO.output(LED_PIN, GPIO.LOW)
 
 # MQTT Setup
-BROKER = "localhost"
-PRINTER_TOPIC = "printer_power"
-LIGHT_TOPIC = "enclosure_light"
-POWER_SUFFIX = "POWER1"
-PORT = 1883
+broker = auth.broker
+printer_topic = auth.printer_topic
+light_topic = auth.light_topic
+power_suffix = auth.power_suffix
+mqtt_port = auth.mqtt_port
 KEEP_ALIVE = 60
 RECONNECT_DELAY = 5
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
@@ -62,12 +62,12 @@ def on_connect(client, userdata, flags, reason_code, props):
     _ = userdata, flags, props  # unused
     sys.stdout.write(f"MQTT connected: {reason_code}\n")
 
-    client.subscribe(f"stat/{PRINTER_TOPIC}/{POWER_SUFFIX}")
-    client.subscribe(f"stat/{LIGHT_TOPIC}/{POWER_SUFFIX}")
+    client.subscribe(f"stat/{printer_topic}/{power_suffix}")
+    client.subscribe(f"stat/{light_topic}/{power_suffix}")
 
     # Initial State (fallback if no retained)
-    client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", "")
-    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "")
+    client.publish(f"cmnd/{printer_topic}/{power_suffix}", "")
+    client.publish(f"cmnd/{light_topic}/{power_suffix}", "")
 
 
 def on_disconnect(client, userdata, reason_code, props):
@@ -88,12 +88,12 @@ def on_message(client, userdata, msg):
 
     payload = msg.payload.decode()
 
-    if msg.topic == f"stat/{PRINTER_TOPIC}/{POWER_SUFFIX}":
+    if msg.topic == f"stat/{printer_topic}/{power_suffix}":
         printer_state = (payload == "ON")
         printer_known = True
         update_led()
 
-    elif msg.topic == f"stat/{LIGHT_TOPIC}/{POWER_SUFFIX}":
+    elif msg.topic == f"stat/{light_topic}/{power_suffix}":
         light_state = (payload == "ON")
         light_known = True
 
@@ -123,14 +123,14 @@ def waiting_animation():
 
 # ---------------- ACTIONS ----------------
 def toggle_light_only():
-    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", "TOGGLE")
+    client.publish(f"cmnd/{light_topic}/{power_suffix}", "TOGGLE")
     threading.Thread(target=delayed_bot_update, daemon=True).start()
 
 
 def set_all(on: bool):
     cmd = "ON" if on else "OFF"
-    client.publish(f"cmnd/{PRINTER_TOPIC}/{POWER_SUFFIX}", cmd)
-    client.publish(f"cmnd/{LIGHT_TOPIC}/{POWER_SUFFIX}", cmd)
+    client.publish(f"cmnd/{printer_topic}/{power_suffix}", cmd)
+    client.publish(f"cmnd/{light_topic}/{power_suffix}", cmd)
     threading.Thread(target=delayed_bot_update, daemon=True).start()
 
 
@@ -141,7 +141,7 @@ def delayed_bot_update():
 
 
 # ---------------- START ----------------
-client.connect(BROKER, PORT, KEEP_ALIVE)
+client.connect(broker, mqtt_port, KEEP_ALIVE)
 client.loop_start()
 blink_thread = threading.Thread(target=waiting_animation, daemon=True)
 blink_thread.start()
