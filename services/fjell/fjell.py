@@ -5,20 +5,17 @@ from time import sleep
 
 import adafruit_dht
 import board
-import requests
 
 # to import own necessary modules
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
 import power_control
+import yeti
 
-SENSOR = adafruit_dht.DHT22(board.D24)
-
-POLLING_INTERVAL = 60
-CACHE_FILE = "/home/kaulketh/newKobraPi/services/fjell/dht_cache.json"
-
-URL = "http://fjell.local/api/marquee"
+SENSOR = adafruit_dht.DHT22(board.D24, use_pulseio=True)
+POLLING_INTERVAL = 120  # min 3 seconds
+CACHE_FILE = "/tmp/dht_cache.json"
 
 last_humidity = None
 last_temperature = None
@@ -64,28 +61,33 @@ def save_cached_values(humidity, temperature):
 def get_values() -> tuple:
     global last_humidity, last_temperature
 
-    try:
-        humidity = SENSOR.humidity
-        temperature = SENSOR.temperature
+    for attempt in range(3):
+        try:
+            temperature = SENSOR.temperature
+            humidity = SENSOR.humidity
 
-        if humidity is not None and temperature is not None:
-            last_humidity = humidity
-            last_temperature = temperature
+            if temperature is not None and humidity is not None:
+                last_temperature = temperature
+                last_humidity = humidity
 
-            save_cached_values(
-                humidity,
-                temperature
-            )
+                save_cached_values(
+                    humidity,
+                    temperature
+                )
 
-        else:
+                break
+
+        except RuntimeError as e:
             sys.stderr.write(
-                "Failed to get temperature and humidity values. "
-                "Using cached values.\n"
+                f"DHT22 read error "
+                f"(attempt {attempt + 1}/3): {e}\n"
             )
 
-    except RuntimeError as e:
+            sleep(2)
+
+    else:
         sys.stderr.write(
-            f"DHT22 read error: {e}. "
+            "DHT22 read failed after 3 attempts. "
             "Using cached values.\n"
         )
 
@@ -101,29 +103,14 @@ def get_values() -> tuple:
 
 def post_to_fjell(humidity_str, temperature_str):
     summary = (
-        f"Printer powered on! "
-        f"Temperature: {temperature_str}  "
-        f"Humidity: {humidity_str}"
+        f"Printer ON, "
+        f"Enclosure temp. {temperature_str}  "
+        f"and hum. {humidity_str}"
     )
 
     sys.stdout.write(f"{summary}\n")
-
-    params = {
-        "mode": "once",
-        "text": summary
-    }
-
-    try:
-        requests.post(
-            URL,
-            params=params,
-            timeout=5
-        )
-
-    except requests.RequestException as e:
-        sys.stderr.write(
-            f"Could not post values to Fjell: {e}\n"
-        )
+    yeti.FJELL.marquee(summary, yeti.FJELL.mode.once)
+    # yeti.FJELL.beep(3500, 500)
 
 
 def main():
@@ -134,12 +121,10 @@ def main():
             humidity_str,
             temperature_str
         )
-
     sleep(POLLING_INTERVAL)
 
 
 if __name__ == "__main__":
     load_cached_values()
-
     while True:
         main()
