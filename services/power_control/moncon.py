@@ -54,7 +54,7 @@ bot = telepot.Bot(TELEGRAM_TOKEN)
 BOT_NAME = "[Power consumption monitor] "
 
 
-def _get_power_usage(device_url=TASMOTA_SOCKETS.get("printer").get("url")):
+def get_power_usage(device_url=TASMOTA_SOCKETS.get("printer").get("url")):
     try:
         response = requests.get(device_url, params={"cmnd": "Status 8"})
         response.raise_for_status()
@@ -98,7 +98,7 @@ def monitor_and_control():
 
     while True:
         try:
-            power = _get_power_usage()
+            power = get_power_usage()
             if power is None:
                 sys.stdout.write("Can't get power consumption!\n")
             else:

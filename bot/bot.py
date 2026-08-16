@@ -83,7 +83,11 @@ def __service_keyboard():
         btns.append(InlineKeyboardButton(text=f"{text}",
                                          callback_data=f"service:{s}"))
     mrkup = InlineKeyboardMarkup(
-        inline_keyboard=[btns[:2], btns[2:4], btns[4:]])
+        inline_keyboard=[btns[:2],
+                         btns[2:4],
+                         btns[4:6],
+                         btns[6:]])
+
     sys.stdout.write(log)
     return status_text, mrkup
 

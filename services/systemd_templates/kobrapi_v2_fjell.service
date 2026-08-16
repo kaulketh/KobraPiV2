@@ -1,0 +1,14 @@
+[Unit]
+Description=KobraPiV2 Fjell control
+After=multi-user.target
+
+[Service]
+User=kaulketh
+WorkingDirectory=/home/kaulketh/newKobraPi/services/fjell
+ExecStart=/usr/bin/python /home/kaulketh/newKobraPi/services/fjell/fjell.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
