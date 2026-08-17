@@ -66,9 +66,11 @@ global cams_powered
 
 
 def __service_keyboard():
+    global srvcs
     status_text = "*systemd services*\n"
     btns = []
     log = ""
+
     for s in srvcs:
         state = services.get_service_info(s)['status']
         # "active", "inactive", "failed", etc.
@@ -78,17 +80,15 @@ def __service_keyboard():
             icon = icon_off
         else:
             icon = icon_failed
+
         text = f"{icon} {s}"
         log += f"{s}={state}\n"
         btns.append(InlineKeyboardButton(text=f"{text}",
                                          callback_data=f"service:{s}"))
-    mrkup = InlineKeyboardMarkup(
-        inline_keyboard=[btns[:2],
-                         btns[2:4],
-                         btns[4:6],
-                         btns[6:]])
 
+    mrkup = InlineKeyboardMarkup(inline_keyboard=[[btn] for btn in btns])
     sys.stdout.write(log)
+
     return status_text, mrkup
 
 
