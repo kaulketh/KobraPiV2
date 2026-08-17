@@ -3,8 +3,7 @@ import os
 import sys
 from time import sleep
 
-import adafruit_dht
-import board
+from dht_pi import Sensor, DHT22
 
 # to import own necessary modules
 sys.path.append(
@@ -13,8 +12,8 @@ sys.path.append(
 import power_control
 import yeti
 
-SENSOR = adafruit_dht.DHT22(board.D24, use_pulseio=True)
-POLLING_INTERVAL = 120  # min 3 seconds
+SENSOR = Sensor(DHT22, 24)
+POLLING_INTERVAL = 60  # > 2 seconds!
 CACHE_FILE = "/tmp/dht_cache.json"
 
 last_humidity = None
@@ -63,8 +62,8 @@ def get_values() -> tuple:
 
     for attempt in range(3):
         try:
-            temperature = SENSOR.temperature
-            humidity = SENSOR.humidity
+            values = SENSOR.read()
+            humidity, temperature = values.humidity, values.temperature
 
             if temperature is not None and humidity is not None:
                 last_temperature = temperature
@@ -101,7 +100,7 @@ def get_values() -> tuple:
     return humidity_str, temperature_str
 
 
-def post_to_fjell(humidity_str, temperature_str):
+def hum_temp_to_fjell(humidity_str, temperature_str):
     summary = (
         f"Printer ON, "
         f"Enclosure temp. {temperature_str}  "
@@ -117,7 +116,7 @@ def main():
     if power_control.get_power_usage() > 0:
         humidity_str, temperature_str = get_values()
 
-        post_to_fjell(
+        hum_temp_to_fjell(
             humidity_str,
             temperature_str
         )
