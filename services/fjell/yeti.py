@@ -1,5 +1,6 @@
 import logging
-from dataclasses import dataclass
+import random
+from dataclasses import dataclass, fields
 from time import sleep
 
 import requests
@@ -22,6 +23,11 @@ class Gestures:
     angry: str = "angry"
     left: str = "left"
     fire: str = "fire"
+
+    @classmethod
+    def random(cls) -> str:
+        return random.choice(
+            [getattr(cls, field.name) for field in fields(cls)])
 
 
 @dataclass(frozen=True)
@@ -126,7 +132,7 @@ class Fjell:
     def tap(self) -> bool:
         return self._post("tap")
 
-    def double(self) -> bool:
+    def double_tap(self) -> bool:
         return self._post("double")
 
     def sleep(self) -> bool:

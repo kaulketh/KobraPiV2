@@ -13,7 +13,7 @@ import power_control
 import yeti
 
 SENSOR = Sensor(DHT22, 24)
-POLLING_INTERVAL = 60  # > 2 seconds!
+POLLING_INTERVAL = 30  # > 2 seconds!
 CACHE_FILE = "/tmp/dht_cache.json"
 
 last_humidity = None
@@ -120,6 +120,11 @@ def main():
             humidity_str,
             temperature_str
         )
+    else:
+        yeti.FJELL.emotion(yeti.Gestures.random())
+        sleep(3)
+        yeti.FJELL.double_tap()
+
     sleep(POLLING_INTERVAL)
 
 
